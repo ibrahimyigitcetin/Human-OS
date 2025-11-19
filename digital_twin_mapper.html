@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HUMAN OS // OMNI v8.0</title>
+    <style>
+        /* * ==========================================================================
+         * 1. OMNI THEME ENGINE
+         * ==========================================================================
+         */
+        :root {
+            --bg-void: #000000;
+            --bg-glass: rgba(20, 25, 35, 0.6);
+            --bg-panel: rgba(15, 18, 25, 0.9);
+            
+            /* Neon Palette */
+            --neon-blue: #00f3ff;
+            --neon-purple: #9d00ff;
+            --neon-green: #00ff41;
+            --neon-red: #ff003c;
+            --neon-amber: #ffb300;
+            
+            --text-bright: #ffffff;
+            --text-dim: #64748b;
+            
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+            --border-glow: 1px solid rgba(0, 243, 255, 0.3);
+            
+            --font-hud: 'Rajdhani', sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+            
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; user-select: none; }
+        
+        body {
+            background-color: var(--bg-void);
+            background-image: 
+                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            color: var(--text-bright);
+            font-family: var(--font-hud);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* CRT Vignette */
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, transparent 60%, rgba(0,0,0,0.8) 100%);
+            pointer-events: none; z-index: 900;
+        }
+
+        /* * ==========================================================================
+         * 2. LAYOUT ARCHITECTURE
+         * ==========================================================================
+         */
+        .omni-grid {
+            display: grid; width: 100vw; height: 100vh;
+            grid-template-columns: 80px 1fr;
+            grid-template-rows: 70px 1fr 30px;
+            grid-template-areas: 
+                "sidebar header"
+                "sidebar main"
+                "sidebar footer";
+        }
+
+        /* Sidebar */
+        .sidebar {
+            grid-area: sidebar;
+            background: rgba(5, 5, 10, 0.8);
+            border-right: var(--border);
+            display: flex; flex-direction: column; align-items: center;
+            padding-top: 25px; z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-btn {
+            width: 50px; height: 50px; margin-bottom: 20px;
+            display: flex; justify-content: center; align-items: center;
+            color: var(--text-dim); border-radius: 12px; transition: 0.3s var(--ease);
+            cursor: pointer; border: 1px solid transparent;
+        }
+        .nav-btn:hover { color: var(--text-bright); background: rgba(255,255,255,0.05); }
+        .nav-btn.active {
+            color: var(--neon-blue); border-color: var(--neon-blue);
+            background: rgba(0, 243, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+        }
+
+        /* Header */
+        .header {
+            grid-area: header;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 30px; border-bottom: var(--border);
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
+        }
+
+        .brand { font-family: var(--font-code); font-size: 20px; letter-spacing: 2px; font-weight: 800; }
+        .brand span { color: var(--neon-blue); }
+
+        .control-deck {
+            display: flex; gap: 20px; align-items: center;
+        }
+
+        /* Global Simulation Switch */
+        .sim-switch {
+            display: flex; align-items: center; gap: 10px;
+            border: 1px solid #333; padding: 5px 15px; border-radius: 20px;
+            cursor: pointer; transition: 0.3s;
+        }
+        .sim-switch:hover { border-color: var(--text-dim); }
+        .sim-switch.active {
+            border-color: var(--neon-purple); background: rgba(157, 0, 255, 0.1);
+            box-shadow: 0 0 15px rgba(157, 0, 255, 0.3);
+        }
+        .sim-led {
+            width: 8px; height: 8px; background: #333; border-radius: 50%;
+        }
+        .sim-switch.active .sim-led { background: var(--neon-purple); box-shadow: 0 0 10px var(--neon-purple); }
+
+        /* Battery */
+        .battery-module { display: flex; align-items: center; gap: 10px; color: var(--neon-green); font-family: var(--font-code); font-size: 12px; }
+        .bat-body {
+            width: 40px; height: 14px; border: 1px solid var(--neon-green); padding: 2px; position: relative;
+        }
+        .bat-fill { width: 100%; height: 100%; background: var(--neon-green); transition: width 0.5s; }
+
+        /* Main Viewport */
+        .viewport {
+            grid-area: main; position: relative; overflow: hidden;
+        }
+        .view {
+            position: absolute; inset: 0; padding: 20px;
+            display: none; opacity: 0; transform: scale(0.98);
+            transition: 0.4s var(--ease);
+        }
+        .view.active { display: grid; opacity: 1; transform: scale(1); }
+
+        /* * ==========================================================================
+         * 3. DASHBOARD COMPONENTS
+         * ==========================================================================
+         */
+        #v-dash {
+            grid-template-columns: 350px 1fr 300px; gap: 20px;
+        }
+
+        .panel {
+            background: var(--bg-panel); border: var(--border); border-radius: 8px;
+            display: flex; flex-direction: column; overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        .panel-head {
+            padding: 15px; border-bottom: var(--border);
+            font-family: var(--font-code); font-size: 11px; color: var(--text-dim);
+            display: flex; justify-content: space-between;
+        }
+        .panel-body { flex: 1; padding: 20px; overflow-y: auto; position: relative; }
+
+        /* Inputs */
+        .c-input {
+            width: 100%; background: rgba(0,0,0,0.5); border: 1px solid #333; color: #fff;
+            padding: 12px; margin-bottom: 15px; font-family: var(--font-hud); border-radius: 4px;
+        }
+        .c-input:focus { border-color: var(--neon-blue); }
+        
+        .c-btn {
+            width: 100%; padding: 12px; background: var(--neon-blue); color: #000; border: none;
+            font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .c-btn:hover { background: #fff; box-shadow: 0 0 20px var(--neon-blue); }
+
+        /* Hologram */
+        #holo-stage { background: radial-gradient(circle, rgba(0, 243, 255, 0.05), transparent 70%); }
+        canvas { display: block; width: 100%; height: 100%; }
+
+        /* Logs */
+        .log-row {
+            display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #333;
+            font-size: 12px; animation: slideIn 0.2s ease;
+        }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; } }
+
+        /* * ==========================================================================
+         * 4. SYSTEM & ANALYTICS
+         * ==========================================================================
+         */
+        #v-system { grid-template-columns: 1fr; max-width: 800px; margin: 0 auto; gap: 20px; display: flex; flex-direction: column; }
+        
+        /* Terminal Effect */
+        .terminal-window {
+            background: #050505; border: 1px solid #333; font-family: var(--font-code); font-size: 11px;
+            padding: 15px; height: 300px; overflow-y: auto; color: var(--neon-green);
+        }
+        .term-line { margin-bottom: 2px; }
+        .term-warn { color: var(--neon-amber); }
+        .term-err { color: var(--neon-red); }
+
+        #v-analytics { grid-template-columns: 1fr 1fr; gap: 20px; }
+        .chart-container { height: 100%; display: flex; justify-content: center; align-items: center; }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            #v-dash { grid-template-columns: 1fr; grid-template-rows: auto 400px auto; }
+            .omni-grid { grid-template-columns: 60px 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="omni-grid">
+    <aside class="sidebar">
+        <div class="nav-btn active" id="nav-dash" onclick="App.route('dash')" title="DASHBOARD">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg>
+        </div>
+        <div class="nav-btn" id="nav-ana" onclick="App.route('ana')" title="ANALYTICS">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 21H3l9-18 9 18z"/><path d="M12 16v-4"/></svg>
+        </div>
+        <div class="nav-btn" id="nav-sys" onclick="App.route('sys')" title="SYSTEM CORE">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        </div>
+    </aside>
+
+    <header class="header">
+        <div class="brand">HUMAN<span>OS</span> // OMNI</div>
+        
+        <div class="control-deck">
+            <div class="sim-switch" id="sim-toggle" onclick="App.Sim.toggle()">
+                <div class="sim-led"></div>
+                <span style="font-size: 12px; letter-spacing: 1px;">SIMULATION</span>
+            </div>
+
+            <div class="battery-module">
+                <span id="bat-txt">100%</span>
+                <div class="bat-body"><div class="bat-fill" id="bat-bar"></div></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="viewport">
+        
+        <section id="v-dash" class="view active">
+            <div class="panel">
+                <div class="panel-head">MANUAL INJECTION</div>
+                <div class="panel-body">
+                    <form id="dataForm">
+                        <label style="font-size:10px; color:#666; display:block; margin-bottom:5px;">PROTOCOL</label>
+                        <select id="inp-type" class="c-input">
+                            <option value="work">DEEP WORK (Blue)</option>
+                            <option value="rest">RECOVERY (Green)</option>
+                            <option value="social">SOCIAL (Purple)</option>
+                            <option value="fun">DOPAMINE (Red)</option>
+                        </select>
+                        
+                        <label style="font-size:10px; color:#666; display:block; margin-bottom:5px;">DURATION (MIN)</label>
+                        <input type="number" id="inp-dur" class="c-input" value="60">
+                        
+                        <label style="font-size:10px; color:#666; display:block; margin-bottom:5px;">NOTE</label>
+                        <input type="text" id="inp-note" class="c-input" placeholder="...">
+
+                        <button type="submit" class="c-btn">EXECUTE</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-head">NEURAL TOPOLOGY [CANVAS]</div>
+                <div class="panel-body" id="holo-stage" style="padding:0;">
+                    <canvas id="canvas-main"></canvas>
+                    <div style="position:absolute; bottom:10px; left:10px; font-size:10px; color:var(--neon-blue);">LIVE RENDER</div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-head">EVENT LOGS</div>
+                <div class="panel-body" id="log-box">
+                    <div style="text-align:center; color:#444; margin-top:20px;">No Data...</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="v-ana" class="view">
+            <div class="panel">
+                <div class="panel-head">RADAR METRICS</div>
+                <div class="panel-body chart-container" id="radar-box">
+                    </div>
+            </div>
+            <div class="panel">
+                <div class="panel-head">DISTRIBUTION</div>
+                <div class="panel-body">
+                    <div id="stats-output" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"></div>
+                    <div style="margin-top:20px; padding:15px; border:1px solid #333; background:rgba(0,0,0,0.3);">
+                        <strong style="color:var(--neon-blue)">AI INSIGHT:</strong>
+                        <p id="ai-insight" style="font-size:12px; color:#aaa; margin-top:5px;">Collecting data...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="v-sys" class="view">
+            <div class="panel">
+                <div class="panel-head">KERNEL MONITOR [LIVE]</div>
+                <div class="panel-body" style="padding:0;">
+                    <div class="terminal-window" id="sys-term">
+                        <div class="term-line">HUMAN_OS KERNEL v8.0 BOOT SEQUENCE...</div>
+                        <div class="term-line">MOUNTING VOLUMES... OK</div>
+                        <div class="term-line">LOADING NEURAL INTERFACE... OK</div>
+                        <div class="term-line">SYSTEM IDLE.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel" style="flex:0;">
+                <div class="panel-head">MAINTENANCE</div>
+                <div class="panel-body" style="display:flex; gap:10px;">
+                    <button class="c-btn" onclick="App.Core.export()">EXPORT JSON</button>
+                    <button class="c-btn" style="background:var(--neon-red);" onclick="App.Core.wipe()">WIPE SYSTEM</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer style="grid-area: footer; border-top: var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 20px; font-size:10px; color:#444;">
+        <div>SECURE CONNECTION // TLS 1.3</div>
+        <div id="status-ind" style="color:var(--neon-green)">SYSTEM OPTIMAL</div>
+    </footer>
+</div>
+
+<script>
+/**
+ * HUMAN OS // OMNI EDITION (v8.0)
+ * Features: Global Simulation, System Terminal, Live Sync
+ */
+const App = (() => {
+    
+    // --- STATE ---
+    const state = {
+        logs: [],
+        battery: 100,
+        simActive: false,
+        timer: null
+    };
+
+    // --- AUDIO ---
+    const Sfx = {
+        play: (freq, type, len) => {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const o = ctx.createOscillator(); const g = ctx.createGain();
+            o.type = type; o.frequency.value = freq;
+            g.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + len);
+            o.connect(g); g.connect(ctx.destination);
+            o.start(); o.stop(ctx.currentTime + len);
+        },
+        click: () => Sfx.play(1500, 'sine', 0.05),
+        warn: () => Sfx.play(150, 'sawtooth', 0.3),
+        process: () => Sfx.play(800, 'square', 0.05)
+    };
+
+    // --- CORE LOGIC ---
+    const Core = {
+        addLog: (type, dur, note) => {
+            const log = { type, dur, note, ts: new Date() };
+            state.logs.unshift(log);
+            
+            // Bat Math
+            let impact = 0;
+            if(type==='work') impact = -10;
+            else if(type==='rest') impact = 15;
+            else if(type==='social') impact = -5;
+            state.battery = Math.min(100, Math.max(0, state.battery + (impact * (dur/60))));
+
+            // Sync All Views
+            UI.updateLogs();
+            UI.updateBattery();
+            UI.updateTerminal(`PROCESSED: ${type.toUpperCase()} (${dur}m)`);
+            UI.updateAnalytics();
+            Holo.pulse(type);
+
+            if(!state.simActive) Sfx.click();
+        },
+        
+        export: () => {
+            const str = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state.logs));
+            const el = document.createElement('a'); el.href = str; el.download = "human_os_dump.json";
+            el.click();
+            UI.updateTerminal("DATA EXPORTED TO EXTERNAL DRIVE.");
+        },
+
+        wipe: () => {
+            if(confirm("FACTORY RESET?")) {
+                state.logs = []; state.battery = 100;
+                UI.updateLogs(); UI.updateBattery(); UI.updateTerminal("SYSTEM WIPED. REBOOTING...");
+            }
+        }
+    };
+
+    // --- SIMULATION ENGINE ---
+    const Sim = {
+        toggle: () => {
+            const btn = document.getElementById('sim-toggle');
+            state.simActive = !state.simActive;
+
+            if(state.simActive) {
+                btn.classList.add('active');
+                UI.updateTerminal("SIMULATION SEQUENCE INITIATED...", "term-warn");
+                state.timer = setInterval(Sim.loop, 800);
+            } else {
+                btn.classList.remove('active');
+                UI.updateTerminal("SIMULATION ABORTED.");
+                clearInterval(state.timer);
+            }
+        },
+        loop: () => {
+            const types = ['work', 'rest', 'social', 'fun'];
+            const rType = types[Math.floor(Math.random() * types.length)];
+            const rDur = Math.floor(Math.random() * 50) + 10;
+            Core.addLog(rType, rDur, "AUTO_GENERATED_EVENT");
+            
+            // Visual Feedback in System Tab
+            const mem = Math.floor(Math.random() * 1024);
+            UI.updateTerminal(`ALLOCATING MEMORY: 0x${mem.toString(16).toUpperCase()}... OK`);
+        }
+    };
+
+    // --- UI MANAGER ---
+    const UI = {
+        updateLogs: () => {
+            const box = document.getElementById('log-box');
+            if(state.logs.length === 0) { box.innerHTML = '<div style="text-align:center; color:#444">Idle...</div>'; return; }
+            
+            let h = '';
+            state.logs.slice(0, 15).forEach(l => {
+                let c = '#fff';
+                if(l.type==='work') c='var(--neon-blue)';
+                if(l.type==='rest') c='var(--neon-green)';
+                if(l.type==='fun') c='var(--neon-red)';
+                if(l.type==='social') c='var(--neon-purple)';
+                
+                h += `<div class="log-row">
+                    <div><span style="color:${c}">●</span> ${l.type.toUpperCase()} <span style="color:#666"> // ${l.note}</span></div>
+                    <div>${l.dur}m</div>
+                </div>`;
+            });
+            box.innerHTML = h;
+        },
+        updateBattery: () => {
+            const bar = document.getElementById('bat-bar');
+            const txt = document.getElementById('bat-txt');
+            bar.style.width = state.battery + '%';
+            txt.innerText = Math.round(state.battery) + '%';
+            
+            if(state.battery < 20) {
+                bar.style.background = 'var(--neon-red)';
+                document.getElementById('status-ind').innerText = "CRITICAL ENERGY";
+                document.getElementById('status-ind').style.color = "var(--neon-red)";
+            } else {
+                bar.style.background = 'var(--neon-green)';
+                document.getElementById('status-ind').innerText = "SYSTEM OPTIMAL";
+                document.getElementById('status-ind').style.color = "var(--neon-green)";
+            }
+        },
+        updateTerminal: (msg, type='') => {
+            const term = document.getElementById('sys-term');
+            const d = document.createElement('div');
+            d.className = 'term-line ' + type;
+            d.innerText = `> [${new Date().toLocaleTimeString()}] ${msg}`;
+            term.appendChild(d);
+            term.scrollTop = term.scrollHeight;
+            
+            // Keep DOM light
+            if(term.childElementCount > 50) term.removeChild(term.firstChild);
+        },
+        updateAnalytics: () => {
+            const counts = { work:0, rest:0, social:0, fun:0 };
+            state.logs.forEach(l => { if(counts[l.type] !== undefined) counts[l.type] += l.dur; });
+            
+            // SVG Radar
+            const max = Math.max(100, ...Object.values(counts));
+            const getP = (val, angle) => {
+                const r = (val/max) * 80;
+                return `${100 + r * Math.cos(angle)},${100 + r * Math.sin(angle)}`;
+            }
+            
+            const p1 = getP(counts.work, -Math.PI/2); // Top
+            const p2 = getP(counts.social, 0);       // Right
+            const p3 = getP(counts.rest, Math.PI/2);  // Bottom
+            const p4 = getP(counts.fun, Math.PI);     // Left
+            
+            const svg = `<svg width="200" height="200" viewBox="0 0 200 200">
+                <circle cx="100" cy="100" r="80" fill="none" stroke="#333" stroke-dasharray="4"/>
+                <line x1="100" y1="20" x2="100" y2="180" stroke="#333"/>
+                <line x1="20" y1="100" x2="180" y2="100" stroke="#333"/>
+                <polygon points="${p1} ${p2} ${p3} ${p4}" fill="rgba(0,243,255,0.2)" stroke="var(--neon-blue)" stroke-width="2"/>
+                <circle cx="${p1.split(',')[0]}" cy="${p1.split(',')[1]}" r="3" fill="#fff"/>
+                <text x="100" y="15" fill="#fff" font-size="10" text-anchor="middle">WORK</text>
+                <text x="190" y="105" fill="#fff" font-size="10" text-anchor="middle">SOC</text>
+                <text x="100" y="190" fill="#fff" font-size="10" text-anchor="middle">REST</text>
+                <text x="10" y="105" fill="#fff" font-size="10" text-anchor="middle">FUN</text>
+            </svg>`;
+            document.getElementById('radar-box').innerHTML = svg;
+
+            // AI Text
+            const ratio = counts.work / (counts.rest || 1);
+            const ai = document.getElementById('ai-insight');
+            if(ratio > 3) ai.innerText = "WARNING: High stress load detected. Schedule downtime immediately.";
+            else if(ratio < 0.5) ai.innerText = "NOTE: Productivity low. Initiate focus protocol.";
+            else ai.innerText = "STATUS: Balanced behavioral topology.";
+        }
+    };
+
+    // --- HOLOGRAM ENGINE ---
+    const Holo = (() => {
+        const cvs = document.getElementById('canvas-main');
+        const ctx = cvs.getContext('2d');
+        let nodes = [];
+        let active = true;
+
+        const resize = () => {
+            cvs.width = cvs.parentElement.clientWidth;
+            cvs.height = cvs.parentElement.clientHeight;
+        };
+        
+        const pulse = (type) => {
+            let color = '#fff';
+            if(type==='work') color='#00f3ff';
+            if(type==='fun') color='#ff003c';
+            nodes.push({x: cvs.width/2, y: cvs.height/2, vx: (Math.random()-0.5)*4, vy: (Math.random()-0.5)*4, life:1, color});
+            if(nodes.length > 50) nodes.shift();
+        };
+
+        const loop = () => {
+            if(!active) return;
+            ctx.fillStyle = 'rgba(0,0,0,0.1)';
+            ctx.fillRect(0,0,cvs.width,cvs.height);
+            
+            nodes.forEach(n => {
+                n.x += n.vx; n.y += n.vy; n.life -= 0.01;
+                ctx.beginPath();
+                ctx.arc(n.x, n.y, n.life*5, 0, Math.PI*2);
+                ctx.fillStyle = n.color;
+                ctx.fill();
+            });
+            requestAnimationFrame(loop);
+        };
+
+        return { init: () => { resize(); loop(); }, pulse };
+    })();
+
+    // --- ROUTER ---
+    const route = (target) => {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.getElementById('v-'+target).classList.add('active');
+        
+        document.querySelectorAll('.nav-btn').forEach(n => n.classList.remove('active'));
+        document.getElementById('nav-'+target).classList.add('active');
+        
+        if(target === 'dash') Holo.init();
+        if(target === 'ana') UI.updateAnalytics();
+    };
+
+    // --- INIT ---
+    const init = () => {
+        document.getElementById('dataForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            Core.addLog(
+                document.getElementById('inp-type').value,
+                parseInt(document.getElementById('inp-dur').value),
+                document.getElementById('inp-note').value
+            );
+            document.getElementById('inp-note').value = '';
+        });
+        Holo.init();
+        console.log("OMNI KERNEL v8.0 LOADED.");
+    };
+
+    return { init, route, Sim, Core };
+})();
+
+window.onload = App.init;
+</script>
+
+</body>
+</html>
