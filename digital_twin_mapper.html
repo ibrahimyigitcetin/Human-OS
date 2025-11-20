@@ -1,587 +1,538 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en" manifest="humanos.appcache">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HUMAN OS // OMNI v8.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>HUMAN OS // FINALITY v12.1</title>
     <style>
-        /* * ==========================================================================
-         * 1. OMNI THEME ENGINE
-         * ==========================================================================
-         */
+        /* * 1. THEME ENGINE */
         :root {
-            --bg-void: #000000;
-            --bg-glass: rgba(20, 25, 35, 0.6);
-            --bg-panel: rgba(15, 18, 25, 0.9);
+            --bg-void: #020204;
+            --bg-panel: rgba(12, 16, 24, 0.95);
             
-            /* Neon Palette */
-            --neon-blue: #00f3ff;
-            --neon-purple: #9d00ff;
-            --neon-green: #00ff41;
-            --neon-red: #ff003c;
-            --neon-amber: #ffb300;
-            
-            --text-bright: #ffffff;
-            --text-dim: #64748b;
-            
+            /* Neon Spectrum */
+            --cyan: #00f3ff; --gold: #ffd700; --white: #ffffff; --orange: #ff8800;
+            --purple: #bc13fe; --blue: #0077ff; --green: #00ff41; --red: #ff003c;
+
+            --text-main: #e0f7fa; --text-dim: #64748b;
             --border: 1px solid rgba(255, 255, 255, 0.1);
-            --border-glow: 1px solid rgba(0, 243, 255, 0.3);
-            
-            --font-hud: 'Rajdhani', sans-serif;
-            --font-code: 'JetBrains Mono', monospace;
-            
-            --ease: cubic-bezier(0.16, 1, 0.3, 1);
+            --font-hud: 'Rajdhani', sans-serif; --font-mono: 'JetBrains Mono', monospace;
+            --ease: cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; user-select: none; }
         
         body {
             background-color: var(--bg-void);
-            background-image: 
-                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-            color: var(--text-bright);
-            font-family: var(--font-hud);
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
+            background-image: radial-gradient(circle at 50% 50%, rgba(0, 243, 255, 0.03) 0%, transparent 80%);
+            color: var(--text-main); font-family: var(--font-hud);
+            height: 100vh; overflow: hidden; display: flex;
         }
 
-        /* CRT Vignette */
-        body::before {
-            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, transparent 60%, rgba(0,0,0,0.8) 100%);
-            pointer-events: none; z-index: 900;
-        }
-
-        /* * ==========================================================================
-         * 2. LAYOUT ARCHITECTURE
-         * ==========================================================================
-         */
-        .omni-grid {
+        /* * 2. LAYOUT */
+        .grid-shell {
             display: grid; width: 100vw; height: 100vh;
             grid-template-columns: 80px 1fr;
-            grid-template-rows: 70px 1fr 30px;
-            grid-template-areas: 
-                "sidebar header"
-                "sidebar main"
-                "sidebar footer";
+            grid-template-rows: 60px 1fr 30px;
+            grid-template-areas: "sidebar header" "sidebar main" "sidebar footer";
         }
 
         /* Sidebar */
         .sidebar {
-            grid-area: sidebar;
-            background: rgba(5, 5, 10, 0.8);
-            border-right: var(--border);
-            display: flex; flex-direction: column; align-items: center;
-            padding-top: 25px; z-index: 100;
-            backdrop-filter: blur(10px);
+            grid-area: sidebar; background: #050508; border-right: var(--border);
+            display: flex; flex-direction: column; align-items: center; padding-top: 20px; z-index: 100;
         }
-        
         .nav-btn {
-            width: 50px; height: 50px; margin-bottom: 20px;
-            display: flex; justify-content: center; align-items: center;
-            color: var(--text-dim); border-radius: 12px; transition: 0.3s var(--ease);
-            cursor: pointer; border: 1px solid transparent;
+            width: 50px; height: 50px; margin-bottom: 20px; display: flex; justify-content: center; align-items: center;
+            color: var(--text-dim); border-radius: 12px; transition: 0.3s; cursor: pointer; position: relative;
         }
-        .nav-btn:hover { color: var(--text-bright); background: rgba(255,255,255,0.05); }
+        .nav-btn:hover { color: #fff; background: rgba(255,255,255,0.05); }
         .nav-btn.active {
-            color: var(--neon-blue); border-color: var(--neon-blue);
-            background: rgba(0, 243, 255, 0.1);
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+            color: var(--cyan); background: rgba(0, 243, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2); border: 1px solid rgba(0, 243, 255, 0.3);
         }
 
         /* Header */
         .header {
-            grid-area: header;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 30px; border-bottom: var(--border);
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
+            grid-area: header; display: flex; justify-content: space-between; align-items: center;
+            padding: 0 25px; border-bottom: var(--border); background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
         }
+        .brand { font-family: var(--font-mono); font-size: 22px; font-weight: 800; letter-spacing: 1px; }
+        .brand span { color: var(--cyan); text-shadow: 0 0 10px var(--cyan); }
 
-        .brand { font-family: var(--font-code); font-size: 20px; letter-spacing: 2px; font-weight: 800; }
-        .brand span { color: var(--neon-blue); }
+        .deck { display: flex; align-items: center; gap: 15px; }
 
-        .control-deck {
-            display: flex; gap: 20px; align-items: center;
+        /* Sim Toggle */
+        .sim-btn {
+            display: flex; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid #333;
+            border-radius: 4px; cursor: pointer; font-size: 11px; transition: 0.3s;
         }
+        .sim-btn.active { border-color: var(--purple); background: rgba(188, 19, 254, 0.2); color: var(--purple); box-shadow: 0 0 10px var(--purple); }
+        .sim-dot { width: 6px; height: 6px; background: #555; border-radius: 50%; }
+        .sim-btn.active .sim-dot { background: var(--purple); box-shadow: 0 0 5px var(--purple); }
 
-        /* Global Simulation Switch */
-        .sim-switch {
-            display: flex; align-items: center; gap: 10px;
-            border: 1px solid #333; padding: 5px 15px; border-radius: 20px;
-            cursor: pointer; transition: 0.3s;
-        }
-        .sim-switch:hover { border-color: var(--text-dim); }
-        .sim-switch.active {
-            border-color: var(--neon-purple); background: rgba(157, 0, 255, 0.1);
-            box-shadow: 0 0 15px rgba(157, 0, 255, 0.3);
-        }
-        .sim-led {
-            width: 8px; height: 8px; background: #333; border-radius: 50%;
-        }
-        .sim-switch.active .sim-led { background: var(--neon-purple); box-shadow: 0 0 10px var(--neon-purple); }
+        /* Mini Battery */
+        .mini-bat { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--green); }
+        .bat-housing { width: 60px; height: 10px; border: 1px solid #444; padding: 1px; }
+        .bat-fill { width: 100%; height: 100%; background: var(--green); transition: width 0.5s, background 0.3s; }
 
-        /* Battery */
-        .battery-module { display: flex; align-items: center; gap: 10px; color: var(--neon-green); font-family: var(--font-code); font-size: 12px; }
-        .bat-body {
-            width: 40px; height: 14px; border: 1px solid var(--neon-green); padding: 2px; position: relative;
-        }
-        .bat-fill { width: 100%; height: 100%; background: var(--neon-green); transition: width 0.5s; }
-
-        /* Main Viewport */
-        .viewport {
-            grid-area: main; position: relative; overflow: hidden;
-        }
+        /* * 3. MAIN VIEWPORT */
+        .viewport { grid-area: main; position: relative; overflow: hidden; }
         .view {
-            position: absolute; inset: 0; padding: 20px;
-            display: none; opacity: 0; transform: scale(0.98);
-            transition: 0.4s var(--ease);
+            position: absolute; inset: 0; padding: 20px; display: none; opacity: 0; transform: scale(0.98);
+            transition: 0.3s var(--ease);
         }
         .view.active { display: grid; opacity: 1; transform: scale(1); }
 
-        /* * ==========================================================================
-         * 3. DASHBOARD COMPONENTS
-         * ==========================================================================
-         */
-        #v-dash {
-            grid-template-columns: 350px 1fr 300px; gap: 20px;
-        }
-
+        /* Dashboard */
+        #v-dash { grid-template-columns: 340px 1fr 300px; gap: 20px; }
+        
         .panel {
             background: var(--bg-panel); border: var(--border); border-radius: 8px;
-            display: flex; flex-direction: column; overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         .panel-head {
-            padding: 15px; border-bottom: var(--border);
-            font-family: var(--font-code); font-size: 11px; color: var(--text-dim);
-            display: flex; justify-content: space-between;
+            padding: 12px 15px; border-bottom: var(--border); font-size: 10px; letter-spacing: 1px;
+            color: var(--cyan); display: flex; justify-content: space-between; background: rgba(255,255,255,0.02);
         }
-        .panel-body { flex: 1; padding: 20px; overflow-y: auto; position: relative; }
+        .panel-body { flex: 1; padding: 15px; overflow-y: auto; position: relative; }
 
         /* Inputs */
         .c-input {
             width: 100%; background: rgba(0,0,0,0.5); border: 1px solid #333; color: #fff;
-            padding: 12px; margin-bottom: 15px; font-family: var(--font-hud); border-radius: 4px;
+            padding: 10px; margin-bottom: 10px; font-family: var(--font-hud); border-radius: 4px;
         }
-        .c-input:focus { border-color: var(--neon-blue); }
-        
+        .c-input:focus { border-color: var(--cyan); }
         .c-btn {
-            width: 100%; padding: 12px; background: var(--neon-blue); color: #000; border: none;
-            font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
+            width: 100%; padding: 10px; background: transparent; border: 1px solid var(--cyan);
+            color: var(--cyan); font-weight: bold; cursor: pointer; transition: 0.2s; border-radius: 4px;
         }
-        .c-btn:hover { background: #fff; box-shadow: 0 0 20px var(--neon-blue); }
+        .c-btn:hover { background: var(--cyan); color: #000; }
 
-        /* Hologram */
-        #holo-stage { background: radial-gradient(circle, rgba(0, 243, 255, 0.05), transparent 70%); }
+        /* Pomodoro Widget */
+        .pomo-box { border: 1px solid #333; padding: 10px; margin-bottom: 15px; background: rgba(0,0,0,0.3); border-radius: 4px; }
+        .pomo-timer { font-size: 32px; text-align: center; font-family: var(--font-mono); margin: 10px 0; text-shadow: 0 0 10px rgba(255,255,255,0.2); }
+        .pomo-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+        .p-btn { background: #222; border: none; color: #888; padding: 5px; cursor: pointer; font-size: 10px; }
+        .p-btn.active { background: rgba(255,0,0,0.2); color: var(--red); border: 1px solid var(--red); }
+
+        /* Canvas */
+        #neural-stage { padding: 0; background: radial-gradient(circle, #111, #000); }
         canvas { display: block; width: 100%; height: 100%; }
 
         /* Logs */
         .log-row {
-            display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #333;
-            font-size: 12px; animation: slideIn 0.2s ease;
+            display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #222;
+            font-size: 12px; animation: slideIn 0.3s;
         }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; } }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; } }
 
-        /* * ==========================================================================
-         * 4. SYSTEM & ANALYTICS
-         * ==========================================================================
-         */
-        #v-system { grid-template-columns: 1fr; max-width: 800px; margin: 0 auto; gap: 20px; display: flex; flex-direction: column; }
+        /* Analytics View */
+        #v-ana { grid-template-columns: 1fr 1fr; gap: 20px; }
         
-        /* Terminal Effect */
-        .terminal-window {
-            background: #050505; border: 1px solid #333; font-family: var(--font-code); font-size: 11px;
-            padding: 15px; height: 300px; overflow-y: auto; color: var(--neon-green);
+        /* Macro Bio-Monitor */
+        .bio-container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 20px; }
+        .reactor {
+            width: 180px; height: 180px; border-radius: 50%; border: 10px solid #111; position: relative;
+            display: flex; align-items: center; justify-content: center; box-shadow: 0 0 30px rgba(0,0,0,0.5);
         }
-        .term-line { margin-bottom: 2px; }
-        .term-warn { color: var(--neon-amber); }
-        .term-err { color: var(--neon-red); }
+        .reactor-ring {
+            position: absolute; top: -10px; left: -10px; width: 180px; height: 180px; border-radius: 50%;
+            border: 10px solid transparent; border-top-color: var(--green); transform: rotate(-45deg); transition: 1s ease;
+        }
+        .reactor-val { font-size: 42px; font-weight: bold; font-family: var(--font-mono); }
 
-        #v-analytics { grid-template-columns: 1fr 1fr; gap: 20px; }
-        .chart-container { height: 100%; display: flex; justify-content: center; align-items: center; }
+        /* System View - REPAIRED */
+        #v-sys { grid-template-columns: 1fr; max-width: 600px; margin: 0 auto; gap: 20px; display: flex; flex-direction: column; }
+        
+        /* FIXED KERNEL TERMINAL */
+        .terminal-window {
+            background: #0a0a0a; border: 1px solid #333; padding: 15px; height: 250px; overflow-y: auto;
+            font-family: var(--font-mono); font-size: 11px; color: var(--green); box-shadow: inset 0 0 20px rgba(0,0,0,1);
+        }
+        .term-line { margin-bottom: 2px; opacity: 0.9; border-bottom: 1px solid #111; padding: 2px 0; }
+        .term-ts { color: #666; margin-right: 5px; }
+        
+        /* Data Controls */
+        .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+        /* Guide Overlay */
+        #guide-layer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999;
+            display: none; pointer-events: auto;
+            /* The Hole Trick */
+            border-style: solid; border-color: rgba(0,0,0,0.9); border-width: 0;
+            transition: all 0.5s ease;
+        }
+        .guide-msg {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 300px; background: rgba(10, 15, 20, 0.95); border: 1px solid var(--cyan);
+            padding: 20px; color: #fff; box-shadow: 0 0 40px rgba(0, 243, 255, 0.2);
+        }
 
         /* Responsive */
         @media (max-width: 1200px) {
             #v-dash { grid-template-columns: 1fr; grid-template-rows: auto 400px auto; }
-            .omni-grid { grid-template-columns: 60px 1fr; }
+            .grid-shell { grid-template-columns: 60px 1fr; }
+            #v-ana { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-<div class="omni-grid">
+<div class="grid-shell">
     <aside class="sidebar">
-        <div class="nav-btn active" id="nav-dash" onclick="App.route('dash')" title="DASHBOARD">
+        <div class="nav-btn active" id="nav-dash" onclick="App.Route('dash')" title="DASHBOARD">
             <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg>
         </div>
-        <div class="nav-btn" id="nav-ana" onclick="App.route('ana')" title="ANALYTICS">
+        <div class="nav-btn" id="nav-ana" onclick="App.Route('ana')" title="BIO-ANALYTICS">
             <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 21H3l9-18 9 18z"/><path d="M12 16v-4"/></svg>
         </div>
-        <div class="nav-btn" id="nav-sys" onclick="App.route('sys')" title="SYSTEM CORE">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        <div class="nav-btn" id="nav-sys" onclick="App.Route('sys')" title="SYSTEM CORE">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 17l6-6 4 4 6-6"/><path d="M4 7h16"/></svg>
         </div>
+        <div style="margin-top: auto; margin-bottom: 20px; color: var(--gold); font-weight: bold; cursor: pointer; font-size: 18px;" onclick="App.Guide.start()">?</div>
     </aside>
 
     <header class="header">
-        <div class="brand">HUMAN<span>OS</span> // OMNI</div>
-        
-        <div class="control-deck">
-            <div class="sim-switch" id="sim-toggle" onclick="App.Sim.toggle()">
-                <div class="sim-led"></div>
-                <span style="font-size: 12px; letter-spacing: 1px;">SIMULATION</span>
+        <div class="brand">HUMAN<span>OS</span> <small style="font-size:10px; opacity:0.5;">v12.1 FINAL</small></div>
+        <div class="deck">
+            <div class="sim-btn" id="btn-sim" onclick="App.Sim.toggle()">
+                <div class="sim-dot"></div> <span>AUTO-SIM</span>
             </div>
-
-            <div class="battery-module">
-                <span id="bat-txt">100%</span>
-                <div class="bat-body"><div class="bat-fill" id="bat-bar"></div></div>
+            <div class="mini-bat" id="tour-bat-mini">
+                <span id="mini-bat-txt">100%</span>
+                <div class="bat-housing"><div class="bat-fill" id="mini-bat-bar"></div></div>
             </div>
         </div>
     </header>
 
     <main class="viewport">
-        
-        <section id="v-dash" class="view active">
-            <div class="panel">
-                <div class="panel-head">MANUAL INJECTION</div>
-                <div class="panel-body">
-                    <form id="dataForm">
-                        <label style="font-size:10px; color:#666; display:block; margin-bottom:5px;">PROTOCOL</label>
-                        <select id="inp-type" class="c-input">
-                            <option value="work">DEEP WORK (Blue)</option>
-                            <option value="rest">RECOVERY (Green)</option>
-                            <option value="social">SOCIAL (Purple)</option>
-                            <option value="fun">DOPAMINE (Red)</option>
-                        </select>
-                        
-                        <label style="font-size:10px; color:#666; display:block; margin-bottom:5px;">DURATION (MIN)</label>
-                        <input type="number" id="inp-dur" class="c-input" value="60">
-                        
-                        <label style="font-size:10px; color:#666; display:block; margin-bottom:5px;">NOTE</label>
-                        <input type="text" id="inp-note" class="c-input" placeholder="...">
 
-                        <button type="submit" class="c-btn">EXECUTE</button>
+        <section id="v-dash" class="view active">
+            <div class="panel" id="tour-input">
+                <div class="panel-head">CONTROL DECK</div>
+                <div class="panel-body">
+                    <div class="pomo-box">
+                        <div style="font-size:10px; color:#888; margin-bottom:5px;">NEURAL TIMER</div>
+                        <div class="pomo-controls">
+                            <button class="p-btn active" onclick="App.Pomo.set(25, 'work', this)">FOCUS</button>
+                            <button class="p-btn" onclick="App.Pomo.set(5, 'rest', this)">BREAK</button>
+                        </div>
+                        <div class="pomo-timer" id="pomo-display">25:00</div>
+                        <button class="c-btn" id="pomo-action" onclick="App.Pomo.toggle()" style="padding:5px; font-size:10px;">START</button>
+                    </div>
+                    <div style="font-size:10px; color:#888; margin-bottom:5px;">PROTOCOL INJECTION</div>
+                    <form id="entryForm">
+                        <select id="inp-type" class="c-input">
+                            <option value="work">DEEP WORK</option>
+                            <option value="learn">LEARNING</option>
+                            <option value="create">CREATIVE</option>
+                            <option value="fit">FITNESS</option>
+                            <option value="soc">SOCIAL</option>
+                            <option value="rest">REST</option>
+                            <option value="chaos">ENTROPY</option>
+                        </select>
+                        <input type="number" id="inp-dur" class="c-input" value="60" placeholder="Minutes">
+                        <input type="text" id="inp-note" class="c-input" placeholder="Note...">
+                        <button type="submit" class="c-btn">INJECT DATA</button>
                     </form>
                 </div>
             </div>
 
-            <div class="panel">
-                <div class="panel-head">NEURAL TOPOLOGY [CANVAS]</div>
-                <div class="panel-body" id="holo-stage" style="padding:0;">
-                    <canvas id="canvas-main"></canvas>
-                    <div style="position:absolute; bottom:10px; left:10px; font-size:10px; color:var(--neon-blue);">LIVE RENDER</div>
+            <div class="panel" id="tour-holo">
+                <div class="panel-head">
+                    <span>NEURAL TOPOLOGY</span>
+                    <span style="font-size:9px; opacity:0.7">PHYSICS ENGINE ONLINE</span>
+                </div>
+                <div class="panel-body" id="neural-stage">
+                    <canvas id="main-canvas"></canvas>
                 </div>
             </div>
 
-            <div class="panel">
-                <div class="panel-head">EVENT LOGS</div>
+            <div class="panel" id="tour-logs">
+                <div class="panel-head">DATA STREAM</div>
                 <div class="panel-body" id="log-box">
-                    <div style="text-align:center; color:#444; margin-top:20px;">No Data...</div>
+                    <div style="text-align:center; color:#444; margin-top:20px;">Idle...</div>
                 </div>
             </div>
         </section>
 
         <section id="v-ana" class="view">
             <div class="panel">
-                <div class="panel-head">RADAR METRICS</div>
-                <div class="panel-body chart-container" id="radar-box">
+                <div class="panel-head">BIO-REACTOR STATUS</div>
+                <div class="panel-body bio-container">
+                    <div class="reactor">
+                        <div class="reactor-ring" id="reactor-ring"></div>
+                        <div class="reactor-val" id="reactor-val">100%</div>
                     </div>
-            </div>
-            <div class="panel">
-                <div class="panel-head">DISTRIBUTION</div>
-                <div class="panel-body">
-                    <div id="stats-output" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"></div>
-                    <div style="margin-top:20px; padding:15px; border:1px solid #333; background:rgba(0,0,0,0.3);">
-                        <strong style="color:var(--neon-blue)">AI INSIGHT:</strong>
-                        <p id="ai-insight" style="font-size:12px; color:#aaa; margin-top:5px;">Collecting data...</p>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; width:100%; text-align:center;">
+                        <div style="background:#111; padding:10px;">
+                            <div style="font-size:10px; color:#666">STRESS</div>
+                            <div style="font-size:18px; color:var(--red)" id="stat-stress">0%</div>
+                        </div>
+                        <div style="background:#111; padding:10px;">
+                            <div style="font-size:10px; color:#666">FOCUS</div>
+                            <div style="font-size:18px; color:var(--cyan)" id="stat-focus">0h</div>
+                        </div>
                     </div>
                 </div>
+            </div>
+            <div class="panel">
+                <div class="panel-head">RADAR DISTRIBUTION</div>
+                <div class="panel-body" id="radar-box" style="display:flex; justify-content:center; align-items:center;">
+                    </div>
             </div>
         </section>
 
         <section id="v-sys" class="view">
             <div class="panel">
-                <div class="panel-head">KERNEL MONITOR [LIVE]</div>
+                <div class="panel-head">SYSTEM KERNEL [LIVE]</div>
                 <div class="panel-body" style="padding:0;">
                     <div class="terminal-window" id="sys-term">
-                        <div class="term-line">HUMAN_OS KERNEL v8.0 BOOT SEQUENCE...</div>
-                        <div class="term-line">MOUNTING VOLUMES... OK</div>
-                        <div class="term-line">LOADING NEURAL INTERFACE... OK</div>
-                        <div class="term-line">SYSTEM IDLE.</div>
+                        <div class="term-line">> KERNEL INITIALIZED.</div>
+                        <div class="term-line">> WAITING FOR I/O...</div>
                     </div>
                 </div>
             </div>
-            <div class="panel" style="flex:0;">
-                <div class="panel-head">MAINTENANCE</div>
-                <div class="panel-body" style="display:flex; gap:10px;">
-                    <button class="c-btn" onclick="App.Core.export()">EXPORT JSON</button>
-                    <button class="c-btn" style="background:var(--neon-red);" onclick="App.Core.wipe()">WIPE SYSTEM</button>
+            <div class="panel">
+                <div class="panel-head">DATA GOVERNANCE</div>
+                <div class="panel-body">
+                    <div class="data-grid">
+                        <button class="c-btn" style="border-color:#555; color:#ccc;" onclick="App.Sys.exportCSV()">EXPORT CSV</button>
+                        <button class="c-btn" style="border-color:#555; color:#ccc;" onclick="App.Sys.exportJSON()">EXPORT JSON</button>
+                        
+                        <button class="c-btn" style="border-color:var(--green); color:var(--green);" onclick="document.getElementById('file-imp').click()">IMPORT JSON</button>
+                        <input type="file" id="file-imp" style="display:none;" onchange="App.Sys.importJSON(this)">
+                        
+                        <button class="c-btn" style="border-color:var(--red); color:var(--red);" onclick="App.Sys.wipe()">FACTORY RESET</button>
+                    </div>
                 </div>
             </div>
         </section>
-
     </main>
 
-    <footer style="grid-area: footer; border-top: var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 20px; font-size:10px; color:#444;">
-        <div>SECURE CONNECTION // TLS 1.3</div>
-        <div id="status-ind" style="color:var(--neon-green)">SYSTEM OPTIMAL</div>
+    <footer style="grid-area: footer; border-top: var(--border); padding: 0 20px; display: flex; align-items: center; justify-content: space-between; font-size: 10px; color: #555;">
+        <div>FINALITY ENGINE // ACTIVE</div>
+        <div id="footer-status" style="color:var(--green)">SYSTEM OPTIMAL</div>
     </footer>
 </div>
 
+<div id="guide-layer">
+    <div class="guide-msg">
+        <h3 id="guide-title" style="color:var(--cyan); margin-bottom:10px;">TITLE</h3>
+        <p id="guide-text" style="color:#ccc; line-height:1.5; margin-bottom:15px;">Text</p>
+        <button class="c-btn" style="padding:5px;" onclick="App.Guide.next()">NEXT >></button>
+    </div>
+</div>
+
 <script>
-/**
- * HUMAN OS // OMNI EDITION (v8.0)
- * Features: Global Simulation, System Terminal, Live Sync
- */
 const App = (() => {
     
-    // --- STATE ---
-    const state = {
-        logs: [],
-        battery: 100,
-        simActive: false,
-        timer: null
-    };
-
-    // --- AUDIO ---
-    const Sfx = {
-        play: (freq, type, len) => {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            const o = ctx.createOscillator(); const g = ctx.createGain();
-            o.type = type; o.frequency.value = freq;
-            g.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + len);
-            o.connect(g); g.connect(ctx.destination);
-            o.start(); o.stop(ctx.currentTime + len);
-        },
-        click: () => Sfx.play(1500, 'sine', 0.05),
-        warn: () => Sfx.play(150, 'sawtooth', 0.3),
-        process: () => Sfx.play(800, 'square', 0.05)
-    };
+    // CONFIG
+    const C = { work:'#00f3ff', learn:'#ffd700', create:'#ffffff', fit:'#ff8800', soc:'#bc13fe', rest:'#00ff41', chaos:'#ff003c' };
+    let state = { logs: [], battery: 100, stress: 0 };
+    let simInterval = null;
 
     // --- CORE LOGIC ---
-    const Core = {
+    const Logic = {
         addLog: (type, dur, note) => {
-            const log = { type, dur, note, ts: new Date() };
-            state.logs.unshift(log);
+            state.logs.unshift({ type, dur, note, ts: new Date().toISOString() });
             
-            // Bat Math
-            let impact = 0;
-            if(type==='work') impact = -10;
-            else if(type==='rest') impact = 15;
-            else if(type==='social') impact = -5;
-            state.battery = Math.min(100, Math.max(0, state.battery + (impact * (dur/60))));
-
-            // Sync All Views
-            UI.updateLogs();
-            UI.updateBattery();
-            UI.updateTerminal(`PROCESSED: ${type.toUpperCase()} (${dur}m)`);
-            UI.updateAnalytics();
-            Holo.pulse(type);
-
-            if(!state.simActive) Sfx.click();
-        },
-        
-        export: () => {
-            const str = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state.logs));
-            const el = document.createElement('a'); el.href = str; el.download = "human_os_dump.json";
-            el.click();
-            UI.updateTerminal("DATA EXPORTED TO EXTERNAL DRIVE.");
-        },
-
-        wipe: () => {
-            if(confirm("FACTORY RESET?")) {
-                state.logs = []; state.battery = 100;
-                UI.updateLogs(); UI.updateBattery(); UI.updateTerminal("SYSTEM WIPED. REBOOTING...");
-            }
-        }
-    };
-
-    // --- SIMULATION ENGINE ---
-    const Sim = {
-        toggle: () => {
-            const btn = document.getElementById('sim-toggle');
-            state.simActive = !state.simActive;
-
-            if(state.simActive) {
-                btn.classList.add('active');
-                UI.updateTerminal("SIMULATION SEQUENCE INITIATED...", "term-warn");
-                state.timer = setInterval(Sim.loop, 800);
-            } else {
-                btn.classList.remove('active');
-                UI.updateTerminal("SIMULATION ABORTED.");
-                clearInterval(state.timer);
-            }
-        },
-        loop: () => {
-            const types = ['work', 'rest', 'social', 'fun'];
-            const rType = types[Math.floor(Math.random() * types.length)];
-            const rDur = Math.floor(Math.random() * 50) + 10;
-            Core.addLog(rType, rDur, "AUTO_GENERATED_EVENT");
+            // Battery & Stress Math
+            let b=0, s=0;
+            if(type=='work'){b=-10;s=15;} else if(type=='learn'){b=-8;s=10;}
+            else if(type=='fit'){b=-20;s=-10;} else if(type=='soc'){b=-5;s=-5;}
+            else if(type=='rest'){b=25;s=-20;} else if(type=='chaos'){b=-15;s=20;}
             
-            // Visual Feedback in System Tab
-            const mem = Math.floor(Math.random() * 1024);
-            UI.updateTerminal(`ALLOCATING MEMORY: 0x${mem.toString(16).toUpperCase()}... OK`);
+            const f = dur/60;
+            state.battery = Math.min(100, Math.max(0, state.battery + (b*f)));
+            state.stress = Math.min(100, Math.max(0, state.stress + (s*f)));
+            
+            UI.render();
+            UI.term(`INJECT: ${type.toUpperCase()} (${dur}m)`); // Kernel Feedback
+            Physics.spawn(type, dur);
+            Logic.save();
+        },
+        save: () => localStorage.setItem('HOS_V12', JSON.stringify(state)),
+        load: () => {
+            const d = localStorage.getItem('HOS_V12');
+            if(d) { state = JSON.parse(d); UI.render(); }
         }
     };
 
     // --- UI MANAGER ---
     const UI = {
-        updateLogs: () => {
-            const box = document.getElementById('log-box');
-            if(state.logs.length === 0) { box.innerHTML = '<div style="text-align:center; color:#444">Idle...</div>'; return; }
+        render: () => {
+            // Logs
+            const lb = document.getElementById('log-box');
+            if(state.logs.length===0) lb.innerHTML='<div style="text-align:center;color:#555;margin-top:20px">Idle...</div>';
+            else {
+                let h=''; state.logs.slice(0,15).forEach(l=>{
+                    h+=`<div class="log-row"><div><strong style="color:${C[l.type]}">${l.type.toUpperCase()}</strong> <span style="color:#666">// ${l.note}</span></div><div>${l.dur}m</div></div>`;
+                });
+                lb.innerHTML=h;
+            }
             
-            let h = '';
-            state.logs.slice(0, 15).forEach(l => {
-                let c = '#fff';
-                if(l.type==='work') c='var(--neon-blue)';
-                if(l.type==='rest') c='var(--neon-green)';
-                if(l.type==='fun') c='var(--neon-red)';
-                if(l.type==='social') c='var(--neon-purple)';
-                
-                h += `<div class="log-row">
-                    <div><span style="color:${c}">●</span> ${l.type.toUpperCase()} <span style="color:#666"> // ${l.note}</span></div>
-                    <div>${l.dur}m</div>
-                </div>`;
+            // Bio-Monitor
+            const bat = Math.round(state.battery);
+            document.getElementById('mini-bat-txt').innerText = bat+'%';
+            document.getElementById('mini-bat-bar').style.width = bat+'%';
+            document.getElementById('reactor-val').innerText = bat+'%';
+            const deg = (bat*3.6)-180;
+            document.getElementById('reactor-ring').style.transform = `rotate(${deg}deg)`;
+            
+            let col = C.rest; if(bat<50) col=C.learn; if(bat<20) col=C.chaos;
+            document.getElementById('reactor-ring').style.borderTopColor = col;
+            document.getElementById('mini-bat-bar').style.background = col;
+            
+            // Stats
+            document.getElementById('stat-stress').innerText = Math.round(state.stress)+'%';
+            const f = state.logs.filter(l=>l.type=='work'||l.type=='learn').reduce((a,b)=>a+b.dur,0);
+            document.getElementById('stat-focus').innerText = (f/60).toFixed(1)+'h';
+            
+            // Radar
+            UI.radar();
+        },
+        radar: () => {
+            const c={w:0,r:0,s:0,c:0};
+            state.logs.forEach(l=>{
+                if(l.type=='work'||l.type=='learn')c.w+=l.dur; else if(l.type=='rest'||l.type=='spi')c.r+=l.dur;
+                else if(l.type=='soc'||l.type=='fit')c.s+=l.dur; else c.c+=l.dur;
             });
-            box.innerHTML = h;
+            const max=Math.max(100,c.w,c.r,c.s,c.c);
+            const gp=(v,a)=>`${100+(v/max)*80*Math.cos(a)},${100+(v/max)*80*Math.sin(a)}`;
+            const svg=`<svg width="200" height="200" viewBox="0 0 200 200"><circle cx="100" cy="100" r="80" fill="none" stroke="#333" stroke-dasharray="4"/><line x1="100" y1="20" x2="100" y2="180" stroke="#333"/><line x1="20" y1="100" x2="180" y2="100" stroke="#333"/><polygon points="${gp(c.w,-1.57)} ${gp(c.s,0)} ${gp(c.r,1.57)} ${gp(c.c,3.14)}" fill="rgba(0,243,255,0.2)" stroke="${C.work}" stroke-width="2"/></svg>`;
+            document.getElementById('radar-box').innerHTML=svg;
         },
-        updateBattery: () => {
-            const bar = document.getElementById('bat-bar');
-            const txt = document.getElementById('bat-txt');
-            bar.style.width = state.battery + '%';
-            txt.innerText = Math.round(state.battery) + '%';
-            
-            if(state.battery < 20) {
-                bar.style.background = 'var(--neon-red)';
-                document.getElementById('status-ind').innerText = "CRITICAL ENERGY";
-                document.getElementById('status-ind').style.color = "var(--neon-red)";
-            } else {
-                bar.style.background = 'var(--neon-green)';
-                document.getElementById('status-ind').innerText = "SYSTEM OPTIMAL";
-                document.getElementById('status-ind').style.color = "var(--neon-green)";
-            }
-        },
-        updateTerminal: (msg, type='') => {
-            const term = document.getElementById('sys-term');
-            const d = document.createElement('div');
-            d.className = 'term-line ' + type;
-            d.innerText = `> [${new Date().toLocaleTimeString()}] ${msg}`;
-            term.appendChild(d);
-            term.scrollTop = term.scrollHeight;
-            
-            // Keep DOM light
-            if(term.childElementCount > 50) term.removeChild(term.firstChild);
-        },
-        updateAnalytics: () => {
-            const counts = { work:0, rest:0, social:0, fun:0 };
-            state.logs.forEach(l => { if(counts[l.type] !== undefined) counts[l.type] += l.dur; });
-            
-            // SVG Radar
-            const max = Math.max(100, ...Object.values(counts));
-            const getP = (val, angle) => {
-                const r = (val/max) * 80;
-                return `${100 + r * Math.cos(angle)},${100 + r * Math.sin(angle)}`;
-            }
-            
-            const p1 = getP(counts.work, -Math.PI/2); // Top
-            const p2 = getP(counts.social, 0);       // Right
-            const p3 = getP(counts.rest, Math.PI/2);  // Bottom
-            const p4 = getP(counts.fun, Math.PI);     // Left
-            
-            const svg = `<svg width="200" height="200" viewBox="0 0 200 200">
-                <circle cx="100" cy="100" r="80" fill="none" stroke="#333" stroke-dasharray="4"/>
-                <line x1="100" y1="20" x2="100" y2="180" stroke="#333"/>
-                <line x1="20" y1="100" x2="180" y2="100" stroke="#333"/>
-                <polygon points="${p1} ${p2} ${p3} ${p4}" fill="rgba(0,243,255,0.2)" stroke="var(--neon-blue)" stroke-width="2"/>
-                <circle cx="${p1.split(',')[0]}" cy="${p1.split(',')[1]}" r="3" fill="#fff"/>
-                <text x="100" y="15" fill="#fff" font-size="10" text-anchor="middle">WORK</text>
-                <text x="190" y="105" fill="#fff" font-size="10" text-anchor="middle">SOC</text>
-                <text x="100" y="190" fill="#fff" font-size="10" text-anchor="middle">REST</text>
-                <text x="10" y="105" fill="#fff" font-size="10" text-anchor="middle">FUN</text>
-            </svg>`;
-            document.getElementById('radar-box').innerHTML = svg;
-
-            // AI Text
-            const ratio = counts.work / (counts.rest || 1);
-            const ai = document.getElementById('ai-insight');
-            if(ratio > 3) ai.innerText = "WARNING: High stress load detected. Schedule downtime immediately.";
-            else if(ratio < 0.5) ai.innerText = "NOTE: Productivity low. Initiate focus protocol.";
-            else ai.innerText = "STATUS: Balanced behavioral topology.";
+        term: (msg) => {
+            const t = document.getElementById('sys-term');
+            const time = new Date().toLocaleTimeString();
+            t.innerHTML += `<div class="term-line"><span class="term-ts">[${time}]</span> ${msg}</div>`;
+            t.scrollTop = t.scrollHeight;
         }
     };
 
-    // --- HOLOGRAM ENGINE ---
-    const Holo = (() => {
-        const cvs = document.getElementById('canvas-main');
-        const ctx = cvs.getContext('2d');
-        let nodes = [];
-        let active = true;
-
-        const resize = () => {
-            cvs.width = cvs.parentElement.clientWidth;
-            cvs.height = cvs.parentElement.clientHeight;
+    // --- PHYSICS (CANVAS) ---
+    const Physics = (() => {
+        const cvs=document.getElementById('main-canvas'), ctx=cvs.getContext('2d');
+        let nodes=[];
+        const resize=()=>{cvs.width=cvs.parentElement.clientWidth;cvs.height=cvs.parentElement.clientHeight;};
+        const spawn=(t,d)=>{
+            nodes.push({x:cvs.width/2, y:cvs.height/2, vx:(Math.random()-.5)*2, vy:(Math.random()-.5)*2, c:C[t]||'#fff', r:Math.max(2,d/10)});
+            if(nodes.length>80)nodes.shift();
         };
-        
-        const pulse = (type) => {
-            let color = '#fff';
-            if(type==='work') color='#00f3ff';
-            if(type==='fun') color='#ff003c';
-            nodes.push({x: cvs.width/2, y: cvs.height/2, vx: (Math.random()-0.5)*4, vy: (Math.random()-0.5)*4, life:1, color});
-            if(nodes.length > 50) nodes.shift();
-        };
-
-        const loop = () => {
-            if(!active) return;
-            ctx.fillStyle = 'rgba(0,0,0,0.1)';
-            ctx.fillRect(0,0,cvs.width,cvs.height);
-            
-            nodes.forEach(n => {
-                n.x += n.vx; n.y += n.vy; n.life -= 0.01;
-                ctx.beginPath();
-                ctx.arc(n.x, n.y, n.life*5, 0, Math.PI*2);
-                ctx.fillStyle = n.color;
-                ctx.fill();
-            });
+        const loop=()=>{
+            ctx.clearRect(0,0,cvs.width,cvs.height);
+            for(let i=0;i<nodes.length;i++){
+                let n=nodes[i]; n.x+=n.vx; n.y+=n.vy;
+                if(n.x<0||n.x>cvs.width)n.vx*=-1; if(n.y<0||n.y>cvs.height)n.vy*=-1;
+                ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,6.28); ctx.fillStyle=n.c; ctx.fill();
+                for(let j=i+1;j<nodes.length;j++){
+                    let n2=nodes[j], d=Math.hypot(n.x-n2.x, n.y-n2.y);
+                    if(d<100){ ctx.beginPath(); ctx.strokeStyle=n.c; ctx.globalAlpha=1-(d/100); ctx.moveTo(n.x,n.y); ctx.lineTo(n2.x,n2.y); ctx.stroke(); ctx.globalAlpha=1; }
+                }
+            }
             requestAnimationFrame(loop);
         };
-
-        return { init: () => { resize(); loop(); }, pulse };
+        return { init:()=>{resize(); loop();}, spawn };
     })();
 
-    // --- ROUTER ---
-    const route = (target) => {
-        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.getElementById('v-'+target).classList.add('active');
-        
-        document.querySelectorAll('.nav-btn').forEach(n => n.classList.remove('active'));
-        document.getElementById('nav-'+target).classList.add('active');
-        
-        if(target === 'dash') Holo.init();
-        if(target === 'ana') UI.updateAnalytics();
+    // --- POMODORO ---
+    const Pomo = (() => {
+        let t=null, time=25*60, active=false, mode='work';
+        const tick = () => {
+            time--; update();
+            if(time<=0) { clearInterval(t); active=false; alert(mode.toUpperCase()+" COMPLETE"); Logic.addLog(mode, (mode=='work'?25:5), 'Pomo Session'); }
+        };
+        const update = () => {
+            const m=Math.floor(time/60).toString().padStart(2,'0'), s=(time%60).toString().padStart(2,'0');
+            document.getElementById('pomo-display').innerText = `${m}:${s}`;
+        };
+        const toggle = () => {
+            const btn=document.getElementById('pomo-action');
+            if(active){ clearInterval(t); active=false; btn.innerText='START'; }
+            else { t=setInterval(tick,1000); active=true; btn.innerText='PAUSE'; }
+        };
+        const set = (m, type, el) => {
+            if(active) toggle(); time=m*60; mode=type; update();
+            document.querySelectorAll('.p-btn').forEach(b=>b.classList.remove('active')); el.classList.add('active');
+        };
+        return { toggle, set };
+    })();
+
+    // --- SIMULATION ---
+    const Sim = {
+        toggle: () => {
+            const btn=document.getElementById('btn-sim');
+            if(simInterval) { clearInterval(simInterval); simInterval=null; btn.classList.remove('active'); UI.term("SIM STOPPED."); }
+            else {
+                btn.classList.add('active'); UI.term("SIM STARTED.");
+                simInterval=setInterval(()=>{
+                    const k=Object.keys(C), t=k[Math.floor(Math.random()*k.length)];
+                    Logic.addLog(t, Math.floor(Math.random()*45)+15, 'Auto-Simulated');
+                }, 1000);
+            }
+        }
     };
 
-    // --- INIT ---
-    const init = () => {
-        document.getElementById('dataForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            Core.addLog(
-                document.getElementById('inp-type').value,
-                parseInt(document.getElementById('inp-dur').value),
-                document.getElementById('inp-note').value
-            );
-            document.getElementById('inp-note').value = '';
-        });
-        Holo.init();
-        console.log("OMNI KERNEL v8.0 LOADED.");
+    // --- SYSTEM ---
+    const Sys = {
+        exportJSON: () => { download(JSON.stringify(state.logs), 'humanos.json', 'application/json'); UI.term("JSON EXPORTED."); },
+        exportCSV: () => {
+            let c="Type,Dur,Note,Time\n"; state.logs.forEach(l=>c+=`${l.type},${l.dur},${l.note},${l.ts}\n`);
+            download(c, 'humanos.csv', 'text/csv'); UI.term("CSV EXPORTED.");
+        },
+        importJSON: (el) => {
+            const f=el.files[0], r=new FileReader();
+            r.onload=(e)=>{ try{state.logs=JSON.parse(e.target.result); UI.render(); UI.term("IMPORT OK");}catch{alert("ERR");} };
+            r.readAsText(f);
+        },
+        wipe: () => { if(confirm("RESET?")){ state.logs=[]; state.battery=100; UI.render(); UI.term("WIPED"); }}
+    };
+    const download = (c,n,t) => { const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([c],{type:t})); a.download=n; a.click(); };
+
+    // --- GUIDE ---
+    const Guide = (() => {
+        const steps=[
+            {id:'nav-dash',t:'NAVIGATION',m:'Switch main views here.'},
+            {id:'tour-input',t:'INPUT DECK',m:'Manual Entry & Pomodoro Timer.'},
+            {id:'tour-bat-mini',t:'BIO-MONITOR',m:'Watch your energy levels here.'},
+            {id:'btn-sim',t:'AUTO-SIM',m:'Let the system generate life.'}
+        ];
+        let idx=0;
+        const show = () => {
+            if(idx>=steps.length){document.getElementById('guide-layer').style.display='none';return;}
+            const s=steps[idx], el=document.getElementById(s.id), r=el.getBoundingClientRect(), o=document.getElementById('guide-layer');
+            o.style.display='block';
+            o.style.borderTopWidth=r.top+'px'; o.style.borderBottomWidth=(window.innerHeight-r.bottom)+'px';
+            o.style.borderLeftWidth=r.left+'px'; o.style.borderRightWidth=(window.innerWidth-r.right)+'px';
+            document.getElementById('guide-title').innerText=s.t; document.getElementById('guide-text').innerText=s.m;
+        };
+        return { start:()=>{Route('dash');idx=0;show();}, next:()=>{idx++;show();} };
+    })();
+
+    const Route = (id) => {
+        document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+        document.getElementById('v-'+id).classList.add('active');
+        document.querySelectorAll('.nav-btn').forEach(n=>n.classList.remove('active'));
+        document.getElementById('nav-'+id).classList.add('active');
+        if(id=='dash') Physics.init();
     };
 
-    return { init, route, Sim, Core };
+    return { 
+        init: () => {
+            Logic.load(); Physics.init();
+            document.getElementById('entryForm').addEventListener('submit',e=>{
+                e.preventDefault(); Logic.addLog(document.getElementById('inp-type').value, parseInt(document.getElementById('inp-dur').value), document.getElementById('inp-note').value);
+            });
+        }, Route, Sim, Pomo, Guide, Sys
+    };
 })();
 
 window.onload = App.init;
 </script>
-
 </body>
 </html>
