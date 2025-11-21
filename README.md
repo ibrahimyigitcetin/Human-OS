@@ -43,7 +43,7 @@
 
 3. Tarayıcıda açın → Hazır!
 
-> Hiçbir kurulum, npm, python veya sunucu gerekmez.
+> Hiçbir kurulum, npm veya sunucu gerekmez.
 
 ## Kullanım
 
