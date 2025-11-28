@@ -9,65 +9,71 @@
 
 # HUMAN-OS
 
-**Kişisel Yaşam Simülatörü & Bio-Feedback Dashboard**
-
-> Tek bir HTML dosyasında çalışan, tamamen istemci taraflı (offline-first), yerel depolama (localStorage) kullanan, cyberpunk/neon arayüzlü kişisel yaşam takip ve bio-simulation sistemi.
+**Kişisel Yaşam Simülatörü & Bio-Feedback Dashboard**  
+> Tek bir HTML dosyasında çalışan, tamamen istemci taraflı (offline-first), localStorage kullanan, cyberpunk/neon arayüzlü kişisel yaşam takip ve bio-simulation sistemi.
 
 ## Özellikler
+- **Zero Dependency** – Harici kütüphane, framework veya sunucu yok  
+- **Tamamen Offline** – İnternet bağlantısı gerekmez  
+- **Cyberpunk HUD UI** – Neon temalı, tamamen responsive arayüz  
+- **Neural Topology Canvas** – Fizik tabanlı node & bağlantı görselleştirme (Web Canvas API)  
+- **Pomodoro + Manuel Veri Girişi** – Derin çalışma, öğrenme, yaratıcılık, fitness, sosyal, dinlenme, kaos kategorileri  
+- **Bio-Reactor Simülasyonu** – Gerçek zamanlı Enerji (Battery) ve Stres hesaplaması  
+- **AUTO-SIM Modu** – Otomatik rastgele yaşam simülasyonu (test & eğlence)  
+- **Radar Distribution Grafiği** – Yaşam dengesi (Work / Rest / Social / Entropy)  
+- **Kernel Terminal** – Tüm olayların canlı loglanması  
+- **Veri Yönetimi**  
+  - JSON & CSV dışa aktarma  
+  - JSON içe aktarma  
+  - Factory Reset (tam sıfırlama)  
+- **İlk Kullanım Rehberi** – 8 adımlı interaktif spotlight tur  
+- **localStorage Kalıcılığı** – Tarayıcı kapandıktan sonra veriler korunur  
 
-- **Zero Dependency** – Harici kütüphane, framework veya sunucu yok
-- **Tamamen Offline** – İnternet bağlantısı gerekmez
-- **Cyberpunk UI** – Neon temalı, HUD tarzı responsive arayüz
-- **Neural Topology Canvas** – Fizik tabanlı görsel geri bildirim (Web Canvas API)
-- **Pomodoro + Manuel Veri Girişi** – Derin çalışma, öğrenme, yaratıcılık, fitness, dinlenme vb. kategoriler
-- **Bio-Reactor Simülasyonu** – Enerji (Battery) ve Stres seviyesi gerçek zamanlı hesaplaması
-- **AUTO-SIM Modu** – Hayatınızı otomatik simüle eder (eğlence + stres testi)
-- **Radar Dağılım Grafiği** – Yaşam alanlarınızın dengesini görselleştirir
-- **Kernel Terminal** – Tüm olaylar canlı olarak terminalde loglanır
-- **Veri Yönetimi**
-  - JSON & CSV dışa aktarma
-  - JSON içe aktarma
-  - Factory Reset (tam sıfırlama)
-- **İlk Kullanım Rehberi** – Spotlight-style interaktif tur
-- **localStorage Kalıcılığı** – Tarayıcı kapandıktan sonra verileriniz korunur
+## Hızlı Başlangıç (30 saniye)
+1. Aşağıdaki kodu tamamen kopyalayın veya dosyayı indirin  
+2. `human-os.html` adıyla kaydedin  
+3. Tarayıcıda açın → Hemen çalışır!  
 
-
-## Hızlı Başlangıç (1 Dakika)
-
-1. Dosyayı indirin veya aşağıdaki kodu kopyalayın:
-   ```html
-   <!-- human-os-v12.1.html -->
-   ```
-
-2. `human-os-v12.1.html` adıyla kaydedin
-
-3. Tarayıcıda açın → Hazır!
-
-> Hiçbir kurulum, npm veya sunucu gerekmez.
+> Hiçbir kurulum, npm, sunucu veya hesap gerekmez.
 
 ## Kullanım
+| Bölüm              | Açıklama                                                                 |
+|--------------------|--------------------------------------------------------------------------|
+| CONTROL DECK       | Manuel aktivite girişi & Pomodoro timer                                   |
+| NEURAL TOPOLOGY    | Her aktivite fizik tabanlı neon node olarak eklenir                      |
+| BIO-REACTOR        | Enerji (Battery) ve stres seviyesi canlı gösterilir                      |
+| RADAR DISTRIBUTION | Yaşam alanlarının (Work / Rest / Social / Entropy) dengesi               |
+| DATA STREAM        | Son 15 aktivite logu                                                     |
+| SYSTEM KERNEL      | Canlı terminal logları                                                   |
+| AUTO-SIM           | Header’daki toggle ile otomatik simülasyonu aç/kapat                     |
 
-| Bölüm | Açıklama |
-|-------|----------|
-| CONTROL DECK | Manuel veri girişi & Pomodoro timer |
-| NEURAL TOPOLOGY | Girilen her aktivite görsel node olarak eklenir |
-| BIO-REACTOR | Enerji ve stres seviyenizi canlı gösterir |
-| RADAR DISTRIBUTION | Yaşam dengesi (work/rest/social/chaos) radar |
-| SYSTEM KERNEL | Tüm olayların terminal stili logu |
-| AUTO-SIM | Sistemi kendi kendine veri üretmeye bırakır |
-
-## Veri Modeli
-
-Her giriş şu yapıda `localStorage`'a kaydedilir:
-
+## Veri Modeli (localStorage)
 ```json
 {
-  "type": "work | learn | create | fit | soc | rest | chaos",
-  "dur": 60,
-  "note": "Proje teslimi",
-  "ts": "2025-11-21T14:32:18.123Z"
+  "logs": [
+    {
+      "type": "work | learn | create | fit | soc | rest | chaos",
+      "dur": 60,
+      "note": "Proje teslimi",
+      "ts": "2025-11-28T14:32:18.123Z"
+    }
+  ],
+  "battery": 94.5,
+  "stress": 23
 }
 ```
+
+## Enerji & Stres Hesaplama (saat başına)
+| Aktivite   | Enerji Değişimi | Stres Değişimi |
+|------------|-----------------|----------------|
+| work       | -10             | +15            |
+| learn      | -8              | +10            |
+| create     | — (nötr)        | —              |
+| fit        | -20             | -10            |
+| soc        | -5              | -5             |
+| rest       | +25             | -20            |
+| chaos      | -15             | +20            |
+
 
 ## 🤝 Katkıda Bulunma
 
@@ -90,6 +96,6 @@ Bu proje MIT lisansı altında dağıtılmaktadır. Detaylar için [LICENSE](LIC
 
 ---
 
-**HUMAN OS // FINALITY v12.1**
+**HUMAN OS // FINALITY**
 
 CTRL + ALT + DEL → Yeniden doğ.
