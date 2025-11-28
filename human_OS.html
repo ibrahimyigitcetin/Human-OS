@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>HUMAN OS // FINALITY v12.1</title>
+    <title>HUMAN OS</title>
     <style>
         /* * 1. THEME ENGINE */
         :root {
@@ -22,18 +22,29 @@
             --ease: cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; user-select: none; }
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            outline: none; 
+            user-select: none; 
+        }
         
         body {
             background-color: var(--bg-void);
             background-image: radial-gradient(circle at 50% 50%, rgba(0, 243, 255, 0.03) 0%, transparent 80%);
-            color: var(--text-main); font-family: var(--font-hud);
-            height: 100vh; overflow: hidden; display: flex;
+            color: var(--text-main); 
+            font-family: var(--font-hud);
+            height: 100vh; 
+            overflow: hidden; 
+            display: flex;
         }
 
         /* * 2. LAYOUT */
         .grid-shell {
-            display: grid; width: 100vw; height: 100vh;
+            display: grid; 
+            width: 100vw; 
+            height: 100vh;
             grid-template-columns: 80px 1fr;
             grid-template-rows: 60px 1fr 30px;
             grid-template-areas: "sidebar header" "sidebar main" "sidebar footer";
@@ -41,142 +52,403 @@
 
         /* Sidebar */
         .sidebar {
-            grid-area: sidebar; background: #050508; border-right: var(--border);
-            display: flex; flex-direction: column; align-items: center; padding-top: 20px; z-index: 100;
+            grid-area: sidebar;
+            background: #050508;
+            border-right: var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            z-index: 100;
         }
         .nav-btn {
-            width: 50px; height: 50px; margin-bottom: 20px; display: flex; justify-content: center; align-items: center;
-            color: var(--text-dim); border-radius: 12px; transition: 0.3s; cursor: pointer; position: relative;
+            width: 50px; 
+            height: 50px; 
+            margin-bottom: 20px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            color: var(--text-dim); 
+            border-radius: 12px; 
+            transition: 0.3s; 
+            cursor: pointer; 
+            position: relative;
         }
-        .nav-btn:hover { color: #fff; background: rgba(255,255,255,0.05); }
+        .nav-btn:hover { 
+            color: #fff; 
+            background: rgba(255,255,255,0.05); 
+        }
         .nav-btn.active {
-            color: var(--cyan); background: rgba(0, 243, 255, 0.1);
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2); border: 1px solid rgba(0, 243, 255, 0.3);
+            color: var(--cyan); 
+            background: rgba(0, 243, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2); 
+            border: 1px solid rgba(0, 243, 255, 0.3);
         }
 
         /* Header */
         .header {
-            grid-area: header; display: flex; justify-content: space-between; align-items: center;
-            padding: 0 25px; border-bottom: var(--border); background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
+            grid-area: header; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            padding: 0 25px; 
+            border-bottom: var(--border); 
+            background: rgba(0,0,0,0.6); 
+            backdrop-filter: blur(10px);
         }
-        .brand { font-family: var(--font-mono); font-size: 22px; font-weight: 800; letter-spacing: 1px; }
-        .brand span { color: var(--cyan); text-shadow: 0 0 10px var(--cyan); }
+        .brand { 
+            font-family: var(--font-mono); 
+            font-size: 22px; 
+            font-weight: 800; 
+            letter-spacing: 1px; 
+        }
+        .brand span { 
+            color: var(--cyan); 
+            text-shadow: 0 0 10px var(--cyan); 
+        }
 
-        .deck { display: flex; align-items: center; gap: 15px; }
+        .deck { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+        }
 
         /* Sim Toggle */
         .sim-btn {
-            display: flex; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid #333;
-            border-radius: 4px; cursor: pointer; font-size: 11px; transition: 0.3s;
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            padding: 6px 12px; 
+            border: 1px solid #333;
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 11px; 
+            transition: 0.3s;
         }
-        .sim-btn.active { border-color: var(--purple); background: rgba(188, 19, 254, 0.2); color: var(--purple); box-shadow: 0 0 10px var(--purple); }
-        .sim-dot { width: 6px; height: 6px; background: #555; border-radius: 50%; }
-        .sim-btn.active .sim-dot { background: var(--purple); box-shadow: 0 0 5px var(--purple); }
+        .sim-btn.active { 
+            border-color: var(--purple); 
+            background: rgba(188, 19, 254, 0.2); 
+            color: var(--purple); 
+            box-shadow: 0 0 10px var(--purple); 
+        }
+        .sim-dot { 
+            width: 6px; 
+            height: 6px; 
+            background: #555; 
+            border-radius: 50%; 
+        }
+        .sim-btn.active .sim-dot { 
+            background: var(--purple); 
+            box-shadow: 0 0 5px var(--purple); 
+        }
 
         /* Mini Battery */
-        .mini-bat { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--green); }
-        .bat-housing { width: 60px; height: 10px; border: 1px solid #444; padding: 1px; }
-        .bat-fill { width: 100%; height: 100%; background: var(--green); transition: width 0.5s, background 0.3s; }
+        .mini-bat { 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            font-family: var(--font-mono); 
+            font-size: 11px; 
+            color: var(--green); 
+        }
+        .bat-housing { 
+            width: 60px; 
+            height: 10px; 
+            border: 1px solid #444; 
+            padding: 1px; 
+        }
+        .bat-fill { 
+            width: 100%; 
+            height: 100%; 
+            background: var(--green); 
+            transition: width 0.5s, background 0.3s; 
+        }
 
         /* * 3. MAIN VIEWPORT */
-        .viewport { grid-area: main; position: relative; overflow: hidden; }
+        .viewport { 
+            grid-area: main; 
+            position: relative; 
+            overflow: hidden; 
+        }
         .view {
-            position: absolute; inset: 0; padding: 20px; display: none; opacity: 0; transform: scale(0.98);
+            position: absolute; 
+            inset: 0; 
+            padding: 20px; 
+            display: none; 
+            opacity: 0; 
+            transform: scale(0.98);
             transition: 0.3s var(--ease);
         }
-        .view.active { display: grid; opacity: 1; transform: scale(1); }
+        .view.active { 
+            display: grid; 
+            opacity: 1; 
+            transform: scale(1); 
+        }
 
         /* Dashboard */
-        #v-dash { grid-template-columns: 340px 1fr 300px; gap: 20px; }
+        #v-dash { 
+            grid-template-columns: 340px 1fr 300px; 
+            gap: 20px; 
+        }
         
         .panel {
-            background: var(--bg-panel); border: var(--border); border-radius: 8px;
-            display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: var(--bg-panel); 
+            border: var(--border); 
+            border-radius: 8px;
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         .panel-head {
-            padding: 12px 15px; border-bottom: var(--border); font-size: 10px; letter-spacing: 1px;
-            color: var(--cyan); display: flex; justify-content: space-between; background: rgba(255,255,255,0.02);
+            padding: 12px 15px; 
+            border-bottom: var(--border); 
+            font-size: 10px; 
+            letter-spacing: 1px;
+            color: var(--cyan); 
+            display: flex; 
+            justify-content: space-between; 
+            background: rgba(255,255,255,0.02);
         }
-        .panel-body { flex: 1; padding: 15px; overflow-y: auto; position: relative; }
+        .panel-body { 
+            flex: 1; 
+            padding: 15px; 
+            overflow-y: auto; 
+            position: relative; 
+        }
 
         /* Inputs */
         .c-input {
-            width: 100%; background: rgba(0,0,0,0.5); border: 1px solid #333; color: #fff;
-            padding: 10px; margin-bottom: 10px; font-family: var(--font-hud); border-radius: 4px;
+            width: 100%; 
+            background: rgba(0,0,0,0.5); 
+            border: 1px solid #333; 
+            color: #fff;
+            padding: 10px; 
+            margin-bottom: 10px; 
+            font-family: var(--font-hud); 
+            border-radius: 4px;
         }
-        .c-input:focus { border-color: var(--cyan); }
+        .c-input:focus { 
+            border-color: var(--cyan); 
+        }
         .c-btn {
-            width: 100%; padding: 10px; background: transparent; border: 1px solid var(--cyan);
-            color: var(--cyan); font-weight: bold; cursor: pointer; transition: 0.2s; border-radius: 4px;
+            width: 100%; 
+            padding: 10px; 
+            background: transparent; 
+            border: 1px solid var(--cyan);
+            color: var(--cyan); 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: 0.2s; 
+            border-radius: 4px;
         }
-        .c-btn:hover { background: var(--cyan); color: #000; }
+        .c-btn:hover { 
+            background: var(--cyan); 
+            color: #000; 
+        }
 
         /* Pomodoro Widget */
-        .pomo-box { border: 1px solid #333; padding: 10px; margin-bottom: 15px; background: rgba(0,0,0,0.3); border-radius: 4px; }
-        .pomo-timer { font-size: 32px; text-align: center; font-family: var(--font-mono); margin: 10px 0; text-shadow: 0 0 10px rgba(255,255,255,0.2); }
-        .pomo-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
-        .p-btn { background: #222; border: none; color: #888; padding: 5px; cursor: pointer; font-size: 10px; }
-        .p-btn.active { background: rgba(255,0,0,0.2); color: var(--red); border: 1px solid var(--red); }
+        .pomo-box {
+            border: 1px solid #333; 
+            padding: 10px; 
+            margin-bottom: 15px; 
+            background: rgba(0,0,0,0.3); 
+            border-radius: 4px;
+        }
+        .pomo-timer {
+            font-size: 32px; 
+            text-align: center; 
+            font-family: var(--font-mono); 
+            margin: 10px 0; 
+            text-shadow: 0 0 10px rgba(255,255,255,0.2);
+        }
+        .pomo-controls {
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 5px;
+        }
+        .p-btn {
+            background: #222; 
+            border: none; 
+            color: #888; 
+            padding: 5px; 
+            cursor: pointer; 
+            font-size: 10px;
+        }
+        .p-btn.active {
+            background: rgba(255,0,0,0.2); 
+            color: var(--red); 
+            border: 1px solid var(--red);
+        }
 
         /* Canvas */
-        #neural-stage { padding: 0; background: radial-gradient(circle, #111, #000); }
-        canvas { display: block; width: 100%; height: 100%; }
+        #neural-stage {
+            padding: 0; 
+            background: radial-gradient(circle, #111, #000);
+        }
+        canvas {
+            display: block; 
+            width: 100%; 
+            height: 100%;
+        }
 
         /* Logs */
         .log-row {
-            display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #222;
-            font-size: 12px; animation: slideIn 0.3s;
+            display: flex; 
+            justify-content: space-between; 
+            padding: 6px 0; 
+            border-bottom: 1px dashed #222;
+            font-size: 12px; 
+            animation: slideIn 0.3s;
         }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; } }
+        @keyframes slideIn {from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; } }
 
         /* Analytics View */
-        #v-ana { grid-template-columns: 1fr 1fr; gap: 20px; }
+        #v-ana {
+            grid-template-columns: 1fr 1fr; 
+            gap: 20px;
+        }
         
         /* Macro Bio-Monitor */
-        .bio-container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 20px; }
+        .bio-container { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100%; 
+            gap: 20px; 
+        }
         .reactor {
-            width: 180px; height: 180px; border-radius: 50%; border: 10px solid #111; position: relative;
-            display: flex; align-items: center; justify-content: center; box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            width: 180px; 
+            height: 180px; 
+            border-radius: 50%; 
+            border: 10px solid #111; 
+            position: relative;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
         }
         .reactor-ring {
-            position: absolute; top: -10px; left: -10px; width: 180px; height: 180px; border-radius: 50%;
-            border: 10px solid transparent; border-top-color: var(--green); transform: rotate(-45deg); transition: 1s ease;
+            position: absolute; 
+            top: -10px; 
+            left: -10px; 
+            width: 180px; 
+            height: 180px; 
+            border-radius: 50%;
+            border: 10px solid transparent; 
+            border-top-color: var(--green); 
+            transform: rotate(-45deg); 
+            transition: 1s ease;
         }
-        .reactor-val { font-size: 42px; font-weight: bold; font-family: var(--font-mono); }
+        .reactor-val {
+            font-size: 42px; 
+            font-weight: bold; 
+            font-family: var(--font-mono);
+        }
 
         /* System View - REPAIRED */
-        #v-sys { grid-template-columns: 1fr; max-width: 600px; margin: 0 auto; gap: 20px; display: flex; flex-direction: column; }
+        #v-sys {
+            grid-template-columns: 1fr; 
+            max-width: 600px; 
+            margin: 0 auto; 
+            gap: 20px; 
+            display: flex; 
+            flex-direction: column;
+        }
         
         /* FIXED KERNEL TERMINAL */
         .terminal-window {
-            background: #0a0a0a; border: 1px solid #333; padding: 15px; height: 250px; overflow-y: auto;
-            font-family: var(--font-mono); font-size: 11px; color: var(--green); box-shadow: inset 0 0 20px rgba(0,0,0,1);
+            background: #0a0a0a; 
+            border: 1px solid #333; 
+            padding: 15px; 
+            height: 250px; 
+            overflow-y: auto;
+            font-family: var(--font-mono); 
+            font-size: 11px; 
+            color: var(--green); 
+            box-shadow: inset 0 0 20px rgba(0,0,0,1);
         }
-        .term-line { margin-bottom: 2px; opacity: 0.9; border-bottom: 1px solid #111; padding: 2px 0; }
-        .term-ts { color: #666; margin-right: 5px; }
+        .term-line {
+            margin-bottom: 2px; 
+            opacity: 0.9; 
+            border-bottom: 1px solid #111; 
+            padding: 2px 0;
+        }
+        .term-ts {
+            color: #666; 
+            margin-right: 5px;
+        }
         
         /* Data Controls */
-        .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .data-grid {
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 10px;
+        }
 
         /* Guide Overlay */
         #guide-layer {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999;
-            display: none; pointer-events: auto;
-            /* The Hole Trick */
-            border-style: solid; border-color: rgba(0,0,0,0.9); border-width: 0;
-            transition: all 0.5s ease;
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            z-index: 9999;
+            display: none;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
         }
         .guide-msg {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 300px; background: rgba(10, 15, 20, 0.95); border: 1px solid var(--cyan);
-            padding: 20px; color: #fff; box-shadow: 0 0 40px rgba(0, 243, 255, 0.2);
+            background: rgba(10, 15, 20, 0.98); 
+            border: 2px solid var(--cyan);
+            padding: 30px 40px; 
+            color: #fff; 
+            box-shadow: 0 0 60px rgba(0, 243, 255, 0.4);
+            max-width: 500px;
+            width: 90%;
+            border-radius: 8px;
+            position: relative;
+        }
+        .guide-msg h3 {
+            color: var(--cyan); 
+            margin-bottom: 15px;
+            font-size: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .guide-msg p {
+            color: #ccc; 
+            line-height: 1.8; 
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+        .guide-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .guide-progress {
+            flex: 1;
+            font-size: 11px;
+            color: #666;
+            text-align: center;
         }
 
         /* Responsive */
         @media (max-width: 1200px) {
-            #v-dash { grid-template-columns: 1fr; grid-template-rows: auto 400px auto; }
-            .grid-shell { grid-template-columns: 60px 1fr; }
-            #v-ana { grid-template-columns: 1fr; }
+            #v-dash {
+                grid-template-columns: 1fr; 
+                grid-template-rows: auto 400px auto;
+            }
+            .grid-shell {
+                grid-template-columns: 60px 1fr;
+            }
+            #v-ana {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -197,7 +469,7 @@
     </aside>
 
     <header class="header">
-        <div class="brand">HUMAN<span>OS</span> <small style="font-size:10px; opacity:0.5;">v12.1 FINAL</small></div>
+        <div class="brand">HUMAN<span>OS</span> <small style="font-size:10px; opacity:0.5;">FINALITY</small></div>
         <div class="deck">
             <div class="sim-btn" id="btn-sim" onclick="App.Sim.toggle()">
                 <div class="sim-dot"></div> <span>AUTO-SIM</span>
@@ -322,9 +594,13 @@
 
 <div id="guide-layer">
     <div class="guide-msg">
-        <h3 id="guide-title" style="color:var(--cyan); margin-bottom:10px;">TITLE</h3>
-        <p id="guide-text" style="color:#ccc; line-height:1.5; margin-bottom:15px;">Text</p>
-        <button class="c-btn" style="padding:5px;" onclick="App.Guide.next()">NEXT >></button>
+        <h3 id="guide-title">TITLE</h3>
+        <p id="guide-text">Text</p>
+        <div class="guide-controls">
+            <button class="c-btn" style="padding:8px 15px; flex:1;" onclick="App.Guide.prev()"><< PREV</button>
+            <div class="guide-progress" id="guide-progress">1/4</div>
+            <button class="c-btn" style="padding:8px 15px; flex:1;" onclick="App.Guide.next()">NEXT >></button>
+        </div>
     </div>
 </div>
 
@@ -404,7 +680,11 @@ const App = (() => {
             });
             const max=Math.max(100,c.w,c.r,c.s,c.c);
             const gp=(v,a)=>`${100+(v/max)*80*Math.cos(a)},${100+(v/max)*80*Math.sin(a)}`;
-            const svg=`<svg width="200" height="200" viewBox="0 0 200 200"><circle cx="100" cy="100" r="80" fill="none" stroke="#333" stroke-dasharray="4"/><line x1="100" y1="20" x2="100" y2="180" stroke="#333"/><line x1="20" y1="100" x2="180" y2="100" stroke="#333"/><polygon points="${gp(c.w,-1.57)} ${gp(c.s,0)} ${gp(c.r,1.57)} ${gp(c.c,3.14)}" fill="rgba(0,243,255,0.2)" stroke="${C.work}" stroke-width="2"/></svg>`;
+            const svg=`<svg width="500" height="500" viewBox="0 0 200 200">
+                <circle cx="100" cy="100" r="80" fill="none" stroke="#333" stroke-dasharray="4"/>
+                <line x1="100" y1="20" x2="100" y2="180" stroke="#333"/><line x1="20" y1="100" x2="180" y2="100" stroke="#333"/>
+                <polygon points="${gp(c.w,-1.57)} ${gp(c.s,0)} ${gp(c.r,1.57)} ${gp(c.c,3.14)}" fill="rgba(0,243,255,0.2)" stroke="${C.work}" stroke-width="2"/>
+                </svg>`;
             document.getElementById('radar-box').innerHTML=svg;
         },
         term: (msg) => {
@@ -497,21 +777,36 @@ const App = (() => {
     // --- GUIDE ---
     const Guide = (() => {
         const steps=[
-            {id:'nav-dash',t:'NAVIGATION',m:'Switch main views here.'},
-            {id:'tour-input',t:'INPUT DECK',m:'Manual Entry & Pomodoro Timer.'},
-            {id:'tour-bat-mini',t:'BIO-MONITOR',m:'Watch your energy levels here.'},
-            {id:'btn-sim',t:'AUTO-SIM',m:'Let the system generate life.'}
+            {t:'NAVIGATION SYSTEM',m:'Use the sidebar icons on the left to switch between Dashboard, Analytics, and System views. Each view provides different insights into your productivity data.'},
+            {t:'CONTROL DECK',m:'The input panel lets you manually log activities. Choose an activity type, set duration in minutes, add notes, and inject the data into your system.'},
+            {t:'NEURAL TIMER',m:'Use the Pomodoro timer for focused work sessions. Click FOCUS for 25-minute work blocks or BREAK for 5-minute rest periods. Start/pause with the button below.'},
+            {t:'BIO-MONITOR',m:'Watch your energy levels in real-time. The battery indicator shows your current energy state, influenced by the activities you log. Rest to recharge, work depletes energy.'},
+            {t:'AUTO-SIMULATION',m:'Enable AUTO-SIM in the header to watch the system generate random life activities automatically. Great for testing and visualization.'},
+            {t:'DATA STREAM',m:'The right panel shows your recent activity logs. Each entry displays the activity type, your notes, and duration.'},
+            {t:'ANALYTICS VIEW',m:'Switch to Analytics (second sidebar icon) to see your bio-reactor status and radar distribution of activities across work, rest, social, and creative categories.'},
+            {t:'SYSTEM CORE',m:'The System view (third sidebar icon) shows live kernel logs and data management tools. Export your data as CSV/JSON or import previous sessions.'}
         ];
         let idx=0;
+        
         const show = () => {
-            if(idx>=steps.length){document.getElementById('guide-layer').style.display='none';return;}
-            const s=steps[idx], el=document.getElementById(s.id), r=el.getBoundingClientRect(), o=document.getElementById('guide-layer');
-            o.style.display='block';
-            o.style.borderTopWidth=r.top+'px'; o.style.borderBottomWidth=(window.innerHeight-r.bottom)+'px';
-            o.style.borderLeftWidth=r.left+'px'; o.style.borderRightWidth=(window.innerWidth-r.right)+'px';
-            document.getElementById('guide-title').innerText=s.t; document.getElementById('guide-text').innerText=s.m;
+            const layer = document.getElementById('guide-layer');
+            if(idx >= steps.length) {
+                layer.style.display = 'none';
+                return;
+            }
+            
+            const s = steps[idx];
+            layer.style.display = 'flex';
+            document.getElementById('guide-title').innerText = s.t;
+            document.getElementById('guide-text').innerText = s.m;
+            document.getElementById('guide-progress').innerText = `${idx + 1}/${steps.length}`;
         };
-        return { start:()=>{Route('dash');idx=0;show();}, next:()=>{idx++;show();} };
+        
+        return { 
+            start: () => { idx = 0; show(); }, 
+            next: () => { if(idx < steps.length - 1) { idx++; show(); } else { document.getElementById('guide-layer').style.display = 'none'; } },
+            prev: () => { if(idx > 0) { idx--; show(); } }
+        };
     })();
 
     const Route = (id) => {
