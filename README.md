@@ -29,7 +29,7 @@
 - **İlk Kullanım Rehberi** – 8 adımlı interaktif spotlight tur  
 - **localStorage Kalıcılığı** – Tarayıcı kapandıktan sonra veriler korunur  
 
-## 🚩 Hızlı Başlangıç (30 saniye)
+## 🚩 Hızlı Başlangıç
 1. Aşağıdaki kodu tamamen kopyalayın veya dosyayı indirin  
 2. `human_OS.html` adıyla kaydedin  
 3. Tarayıcıda açın → Hemen çalışır!  
