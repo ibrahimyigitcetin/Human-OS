@@ -31,7 +31,7 @@
 
 ## 🚩 Hızlı Başlangıç (30 saniye)
 1. Aşağıdaki kodu tamamen kopyalayın veya dosyayı indirin  
-2. `human-os.html` adıyla kaydedin  
+2. `human_OS.html` adıyla kaydedin  
 3. Tarayıcıda açın → Hemen çalışır!  
 
 > Hiçbir kurulum, npm, sunucu veya hesap gerekmez.
