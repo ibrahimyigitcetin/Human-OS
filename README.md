@@ -7,7 +7,7 @@
   <img src="https://img.shields.io/badge/Contributions-Welcome-brightgreen?style=flat-square" alt="Contributions">
 </div>
 
-# HUMAN-OS
+# 🌿 HUMAN-OS
 
 **Kişisel Yaşam Simülatörü & Bio-Feedback Dashboard**  
 > Tek bir HTML dosyasında çalışan, tamamen istemci taraflı (offline-first), localStorage kullanan, cyberpunk/neon arayüzlü kişisel yaşam takip ve bio-simulation sistemi.
