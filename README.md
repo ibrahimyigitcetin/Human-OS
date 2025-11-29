@@ -67,11 +67,11 @@
 | Aktivite   | Enerji Değişimi | Stres Değişimi |
 |------------|-----------------|----------------|
 | work       | -10             | +15            |
-| learn      | -8              | +10            |
-| create     | — (nötr)        | —              |
-| fit        | -20             | -10            |
-| soc        | -5              | -5             |
-| rest       | +25             | -20            |
+| learn      | -5              | +5             |
+| create     | —               | —              |
+| fit        | -10             | -15            |
+| soc        | -5              | -10             |
+| rest       | +30             | -20            |
 | chaos      | -15             | +20            |
 
 
