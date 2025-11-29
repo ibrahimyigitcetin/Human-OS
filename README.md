@@ -12,7 +12,7 @@
 **Kişisel Yaşam Simülatörü & Bio-Feedback Dashboard**  
 > Tek bir HTML dosyasında çalışan, tamamen istemci taraflı (offline-first), localStorage kullanan, cyberpunk/neon arayüzlü kişisel yaşam takip ve bio-simulation sistemi.
 
-## Özellikler
+## ✨ Özellikler
 - **Zero Dependency** – Harici kütüphane, framework veya sunucu yok  
 - **Tamamen Offline** – İnternet bağlantısı gerekmez  
 - **Cyberpunk HUD UI** – Neon temalı, tamamen responsive arayüz  
@@ -29,14 +29,14 @@
 - **İlk Kullanım Rehberi** – 8 adımlı interaktif spotlight tur  
 - **localStorage Kalıcılığı** – Tarayıcı kapandıktan sonra veriler korunur  
 
-## Hızlı Başlangıç (30 saniye)
+## 🚩 Hızlı Başlangıç (30 saniye)
 1. Aşağıdaki kodu tamamen kopyalayın veya dosyayı indirin  
 2. `human-os.html` adıyla kaydedin  
 3. Tarayıcıda açın → Hemen çalışır!  
 
 > Hiçbir kurulum, npm, sunucu veya hesap gerekmez.
 
-## Kullanım
+## 💡 Kullanım
 | Bölüm              | Açıklama                                                                 |
 |--------------------|--------------------------------------------------------------------------|
 | CONTROL DECK       | Manuel aktivite girişi & Pomodoro timer                                   |
