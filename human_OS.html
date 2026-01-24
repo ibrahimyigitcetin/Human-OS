@@ -645,11 +645,31 @@ const App = (() => {
             // Logs
             const lb = document.getElementById('log-box');
             if(state.logs.length===0) lb.innerHTML='<div style="text-align:center;color:#555;margin-top:20px">Idle...</div>';
+            // DOM Manipulation
             else {
-                let h=''; state.logs.slice(0,15).forEach(l=>{
-                    h+=`<div class="log-row"><div><strong style="color:${C[l.type]}">${l.type.toUpperCase()}</strong> <span style="color:#666">// ${l.note}</span></div><div>${l.dur}m</div></div>`;
+                lb.textContent = '';
+                state.logs.slice(0, 23).forEach(l => {
+                    const row = document.createElement('div');
+                    row.className = 'log-row';
+
+                    const infoDiv = document.createElement('div');
+                    
+                    const typeStrong = document.createElement('strong');
+                    typeStrong.style.color = C[l.type];
+                    typeStrong.textContent = l.type.toUpperCase();
+
+                    const noteSpan = document.createElement('span');
+                    noteSpan.style.color = '#666';
+                    noteSpan.textContent = ` // ${l.note}`;
+
+                    infoDiv.append(typeStrong, noteSpan);
+
+                    const durDiv = document.createElement('div');
+                    durDiv.textContent = `${l.dur}m`;
+
+                    row.append(infoDiv, durDiv);
+                    lb.appendChild(row);
                 });
-                lb.innerHTML=h;
             }
             
             // Bio-Monitor
