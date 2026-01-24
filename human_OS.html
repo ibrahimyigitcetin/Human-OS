@@ -797,8 +797,8 @@ const App = (() => {
             
             const s = steps[idx];
             layer.style.display = 'flex';
-            document.getElementById('guide-title').innerText = s.t;
-            document.getElementById('guide-text').innerText = s.m;
+            document.getElementById('guide-title').textContent = s.t;
+            document.getElementById('guide-text').textContent = s.m;
             document.getElementById('guide-progress').innerText = `${idx + 1}/${steps.length}`;
         };
         
