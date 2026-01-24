@@ -644,7 +644,15 @@ const App = (() => {
         render: () => {
             // Logs
             const lb = document.getElementById('log-box');
-            if(state.logs.length===0) lb.innerHTML='<div style="text-align:center;color:#555;margin-top:20px">Idle...</div>';
+            if(state.logs.length === 0) {
+                lb.textContent = ''; // Clear
+                const idle = document.createElement('div');
+                idle.style.textAlign = 'center';
+                idle.style.color = '#555';
+                idle.style.marginTop = '20px';
+                idle.textContent = 'Idle...';
+                lb.appendChild(idle);
+            }
             // DOM Manipulation
             else {
                 lb.textContent = '';
