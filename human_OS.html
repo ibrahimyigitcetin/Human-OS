@@ -718,7 +718,18 @@ const App = (() => {
         term: (msg) => {
             const t = document.getElementById('sys-term');
             const time = new Date().toLocaleTimeString();
-            t.innerHTML += `<div class="term-line"><span class="term-ts">[${time}]</span> ${msg}</div>`;
+            
+            const line = document.createElement('div');
+            line.className = 'term-line';
+            
+            const tsSpan = document.createElement('span');
+            tsSpan.className = 'term-ts';
+            tsSpan.textContent = `[${time}] `;
+            
+            line.appendChild(tsSpan);
+            line.append(msg);
+            
+            t.appendChild(line);
             t.scrollTop = t.scrollHeight;
         }
     };
@@ -847,9 +858,29 @@ const App = (() => {
 
     return { 
         init: () => {
-            Logic.load(); Physics.init();
-            document.getElementById('entryForm').addEventListener('submit',e=>{
-                e.preventDefault(); Logic.addLog(document.getElementById('inp-type').value, parseInt(document.getElementById('inp-dur').value), document.getElementById('inp-note').value);
+            Logic.load(); 
+            Physics.init();
+            
+            document.getElementById('entryForm').addEventListener('submit', e => {
+                e.preventDefault();
+                
+                const type = document.getElementById('inp-type').value;
+                const durVal = document.getElementById('inp-dur').value;
+                const note = document.getElementById('inp-note').value;
+                const dur = parseInt(durVal);
+
+                if (isNaN(dur) || dur <= 0 || dur > 1440) {
+                    UI.term("⚠️ Hata: Geçersiz süre girdisi.");
+                    return; 
+                }
+
+                if (note.length > 200) {
+                    UI.term("⚠️ Hata: Not çok uzun (Maks 200 karakter).");
+                    return;
+                }
+
+                Logic.addLog(type, dur, note);
+                document.getElementById('inp-note').value = '';
             });
         }, Route, Sim, Pomo, Guide, Sys
     };
